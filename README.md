@@ -1,2 +1,3 @@
-# constantcontact
-Java wrapper for Constant Contact API
+# Constant Contact
+Java wrapper for Constant Contact API v2
+
