@@ -14,9 +14,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class Api
+public class ApiV2
 {
     private int millisToSleepBetweenRequests = 2000;
+    private CCApi2 api;
+    public CCApi2 getApiConn()
+    {
+        return api;
+    }
+
+    public ApiV2(String key, String token)
+    {
+        this.api = getApiService(key, token);
+    }
 
     /**
      *
@@ -24,7 +34,7 @@ public class Api
      * @param token API token issued by Constant Contact
      * @return      CCApi2 API service object
      */
-    public CCApi2 getApiService(String key, String token)
+    public static CCApi2 getApiService(String key, String token)
     {
         return new CCApi2(key, token);
     }
