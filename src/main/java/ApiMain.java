@@ -1,3 +1,4 @@
+import com.boringguys.constantcontact.v2.AccountService;
 import com.boringguys.constantcontact.v2.ApiV2;
 import com.constantcontact.v2.account.AccountAddress;
 import com.constantcontact.v2.account.AccountSummaryInformation;
@@ -27,11 +28,17 @@ public class ApiMain
     ApiMain()
     {
         getApiConfig();
-        ApiV2 api = new ApiV2(apiKey, apiToken);
 
         // Get the info on your Constant Contact account and print it
-        AccountSummaryInformation summary = api.getAccountSummary();
+        AccountService accountService = new AccountService(apiKey, apiToken);
+        AccountSummaryInformation summary = accountService.getAccountSummary();
         printAccountSummaryInformation(summary);
+
+        // TODO make CCApiV2 a single instance to re-use
+        // TODO split out contact service
+        // TODO split out campaign service
+
+        ApiV2 api = new ApiV2(apiKey, apiToken);
 
         // Get all your existing contact lists and print them
         List<ContactList> lists = api.getContactLists();
@@ -47,10 +54,11 @@ public class ApiMain
             contacts.forEach(a -> printContact(a));
         }
 
+
     }
 
     /**
-     * 
+     *
      * @param contact
      */
     private void printContact(Contact contact)

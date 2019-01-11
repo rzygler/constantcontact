@@ -64,40 +64,8 @@ public class ApiV2
 
 
 
-
-
     /**
      *
-     * @param api
-     * @return
-     */
-    public AccountSummaryInformation getAccountSummary()
-    {
-        try
-        {
-            AccountSummaryInformation summary = api.getAccountService()
-                    .getAccountSummaryInformation()
-                    .execute()
-                    .body();
-
-            if (summary == null)
-            {
-                return null;
-            }
-            return summary;
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        return null;
-
-    }
-
-
-    /**
-     *
-     * @param api
      * @return
      */
     public List<ContactList> getContactLists()
@@ -143,12 +111,11 @@ public class ApiV2
         }
 
         return contacts;
-}
+    }
 
 
     /**
      *
-     * @param api
      * @param listId
      * @param limit
      * @param dateCreated
