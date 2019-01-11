@@ -126,6 +126,26 @@ public class ApiV2
     }
 
 
+    public List<Contact> getContactByEmail(String email)
+    {
+        List<Contact> contacts = new ArrayList<>();
+
+        try
+        {
+            ContactService contactService = api.getContactService();
+            Paged<Contact> pagedContacts = contactService.getContactsByEmail(email).execute().body();
+            if (pagedContacts.getResults().size() > 0)
+            {
+                contacts.addAll(pagedContacts.getResults());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return contacts;
+}
+
+
     /**
      *
      * @param api

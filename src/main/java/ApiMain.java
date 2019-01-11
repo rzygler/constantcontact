@@ -1,6 +1,7 @@
 import com.boringguys.constantcontact.v2.ApiV2;
 import com.constantcontact.v2.account.AccountAddress;
 import com.constantcontact.v2.account.AccountSummaryInformation;
+import com.constantcontact.v2.contacts.Contact;
 import com.constantcontact.v2.contacts.ContactList;
 
 import java.io.FileInputStream;
@@ -28,16 +29,38 @@ public class ApiMain
         getApiConfig();
         ApiV2 api = new ApiV2(apiKey, apiToken);
 
+        // Get the info on your Constant Contact account and print it
         AccountSummaryInformation summary = api.getAccountSummary();
         printAccountSummaryInformation(summary);
 
+        // Get all your existing contact lists and print them
         List<ContactList> lists = api.getContactLists();
         printContactLists(lists);
 
-        // add a setter for the ApiConn in ApiV2, then each method there can just bring it up
-		// but we can mock it with setter if we need to
+        // Get all the contacts from your first list (0) and print them
+        if (lists.size() > 0)
+        {
+            ContactList list = lists.get(0);
+            System.out.println("Fetching list: " + list.getName() + " " + list.getContactCount());
+            System.out.println("--------------------------------");
+            List<Contact> contacts = api.getContactsByList(list.getId(), this.fetchLimit, this.dateCreated);
+            contacts.forEach(a -> printContact(a));
+        }
 
     }
+
+    /**
+     * 
+     * @param contact
+     */
+    private void printContact(Contact contact)
+    {
+        System.out.println(contact.getEmailAddresses()[0].getEmailAddress() + "," +
+                contact.getFirstName() + ","
+                + contact.getLastName() );
+    }
+
+
 
     /**
      *
