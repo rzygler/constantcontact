@@ -18,14 +18,37 @@ public class ApiV2
 {
     private int millisToSleepBetweenRequests = 2000;
     private CCApi2 api;
+
     public CCApi2 getApiConn()
     {
         return api;
     }
 
+    /**
+     *
+     * @param api
+     */
+    public void setApiConn(CCApi2 api)
+    {
+        this.api = api;
+    }
+
+    /**
+     * Constructor
+     * @param key
+     * @param token
+     */
     public ApiV2(String key, String token)
     {
         this.api = getApiService(key, token);
+    }
+
+    /**
+     * Empty Constructor
+     */
+    public ApiV2()
+    {
+
     }
 
     /**
@@ -39,12 +62,16 @@ public class ApiV2
         return new CCApi2(key, token);
     }
 
+
+
+
+
     /**
      *
      * @param api
      * @return
      */
-    public AccountSummaryInformation getAccountSummary(CCApi2 api)
+    public AccountSummaryInformation getAccountSummary()
     {
         try
         {
@@ -73,15 +100,17 @@ public class ApiV2
      * @param api
      * @return
      */
-    public List<ContactList> getContactLists(CCApi2 api)
+    public List<ContactList> getContactLists()
     {
+        List<ContactList> lists = new ArrayList<>();
+
         try
         {
             ContactService contactService = api.getContactService();
 
             // fetching the lists gets ALL your lists at once
             // no need to loop thru, oversight in their API design
-            List<ContactList> lists = contactService.getContactLists(null).execute().body();
+            lists = contactService.getContactLists(null).execute().body();
             if (lists != null && lists.size() != 0)
             {
                 return lists;
@@ -93,7 +122,7 @@ public class ApiV2
         }
 
         // give back empty list if none found
-        return List.of();
+        return lists;
     }
 
 
@@ -105,7 +134,7 @@ public class ApiV2
      * @param dateCreated
      * @return
      */
-    public List<Contact> getContactsByList(CCApi2 api, String listId, int limit, String dateCreated)
+    public List<Contact> getContactsByList(String listId, int limit, String dateCreated)
     {
         List<Contact> contacts = new ArrayList<>();
 

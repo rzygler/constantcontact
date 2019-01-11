@@ -28,12 +28,15 @@ public class ApiMain
         getApiConfig();
         ApiV2 api = new ApiV2(apiKey, apiToken);
 
-        // always pass in an APIConn
-        AccountSummaryInformation summary = api.getAccountSummary(api.getApiConn());
+        AccountSummaryInformation summary = api.getAccountSummary();
         printAccountSummaryInformation(summary);
 
-        List<ContactList> lists = api.getContactLists(api.getApiConn());
+        List<ContactList> lists = api.getContactLists();
         printContactLists(lists);
+
+        // add a setter for the ApiConn in ApiV2, then each method there can just bring it up
+		// but we can mock it with setter if we need to
+
     }
 
     /**
