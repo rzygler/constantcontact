@@ -23,7 +23,7 @@ ApiV2 api = new ApiV2(apiKey, apiToken);
 List<ContactList> lists = api.getContactLists();
 ```
 
-**Fetch all the contacts for list 1**
+**Fetch all the contacts for list with id of 1**
 ```java
 ApiV2 api = new ApiV2(apiKey, apiToken);
 List<Contact> contacts = api.getContactsByList("1", this.fetchLimit, this.dateCreated);
