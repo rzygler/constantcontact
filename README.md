@@ -21,3 +21,6 @@ List<ContactList> lists = api.getContactLists();
 ApiV2 api = new ApiV2(apiKey, apiToken);
 List<Contact> contacts = api.getContactsByList("1", this.fetchLimit, this.dateCreated);
 ```
+
+More examples in [console example](https://github.com/rzygler/constantcontact/blob/master/src/main/java/ApiMain.java)
+
