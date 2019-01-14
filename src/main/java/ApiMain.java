@@ -1,5 +1,6 @@
 import com.boringguys.constantcontact.v2.AccountService;
 import com.boringguys.constantcontact.v2.ApiV2;
+import com.boringguys.constantcontact.v2.ContactService;
 import com.constantcontact.v2.account.AccountAddress;
 import com.constantcontact.v2.account.AccountSummaryInformation;
 import com.constantcontact.v2.contacts.Contact;
@@ -34,14 +35,14 @@ public class ApiMain
         AccountSummaryInformation summary = accountService.getAccountSummary();
         printAccountSummaryInformation(summary);
 
-        // TODO make CCApiV2 a single instance to re-use
-        // TODO split out contact service
         // TODO split out campaign service
 
         ApiV2 api = new ApiV2(apiKey, apiToken);
 
+        ContactService contactService = new ContactService(apiKey, apiToken);
+
         // Get all your existing contact lists and print them
-        List<ContactList> lists = api.getContactLists();
+        List<ContactList> lists = contactService.getContactLists();
         printContactLists(lists);
 
         // Get all the contacts from your first list (0) and print them
@@ -50,9 +51,16 @@ public class ApiMain
             ContactList list = lists.get(0);
             System.out.println("Fetching list: " + list.getName() + " " + list.getContactCount());
             System.out.println("--------------------------------");
-            List<Contact> contacts = api.getContactsByList(list.getId(), this.fetchLimit, this.dateCreated);
+            List<Contact> contacts = contactService.getContactsByList(list.getId(), this.fetchLimit, this.dateCreated);
             contacts.forEach(a -> printContact(a));
         }
+
+
+        // get Homer contact
+        System.out.println("Fetching Homer: ");
+        System.out.println("--------------------------------");
+        List<Contact> contacts = contactService.getContactsByEmail("homer.simpson@gmail.com");
+        contacts.forEach(a -> printContact(a));
 
 
     }
