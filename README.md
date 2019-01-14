@@ -13,20 +13,20 @@ Java wrapper for Constant Contact API v2. Sparse, but working.
 
 **Fetch the info on your Constant Contact account**
 ```java
-ApiV2 api = new ApiV2(apiKey, apiToken);
-AccountSummaryInformation summary = api.getAccountSummary();
+AccountService accountService = new AccountService(apiKey, apiToken);
+AccountSummaryInformation summary = accountService.getAccountSummary();
 ```
 
 **Fetch all your existing contact lists**
 ```java
-ApiV2 api = new ApiV2(apiKey, apiToken);
-List<ContactList> lists = api.getContactLists();
+ContactService contactService = new ContactService(apiKey, apiToken);
+List<ContactList> lists = contactService.getContactLists();
 ```
 
 **Fetch all the contacts for list with id of 1**
 ```java
-ApiV2 api = new ApiV2(apiKey, apiToken);
-List<Contact> contacts = api.getContactsByList("1", this.fetchLimit, this.dateCreated);
+ContactService contactService = new ContactService(apiKey, apiToken);
+List<Contact> contacts = contactService.getContactsByList("1", this.fetchLimit, this.dateCreated);
 ```
 
 More examples in [console example](https://github.com/rzygler/constantcontact/blob/master/src/main/java/ApiMain.java)
