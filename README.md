@@ -28,6 +28,30 @@ List<ContactList> lists = contactService.getContactLists();
 ContactService contactService = new ContactService(apiKey, apiToken);
 List<Contact> contacts = contactService.getContactsByList("1", this.fetchLimit, this.dateCreated);
 ```
+**Fetch a contact**
+```java
+ContactService contactService = new ContactService(apiKey, apiToken);
+List<Contact> contacts = contactService.getContactsByEmail("homer.simpson@gmail.com");
+contacts.forEach(a -> System.out.println(contact.getEmailAddresses()[0].getEmailAddress() + "," +
+                contact.getFirstName() + ","
+                + contact.getLastName() ) );
+```
+**Fetch all draft campaigns**
+```java
+CampaignService campaignService = new CampaignService(apiKey, apiToken);
+List<Campaign> campaigns = campaignService.getDraftCampaigns();
+campaigns.forEach(a -> System.out.println(a.getName()));
+```
+
+**Fetch a campaign**
+```java
+CampaignService campaignService = new CampaignService(apiKey, apiToken);
+Campaign campaign = campaignService.getCampaign("campaign id");
+System.out.println(campaign.getId() + "," +
+                campaign.getName() + "," +
+                campaign.getSubject() + "," +
+                campaign.getCreatedDate())
+```
 
 More examples in [console example](https://github.com/rzygler/constantcontact/blob/master/src/main/java/ApiMain.java)
 
