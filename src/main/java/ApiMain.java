@@ -1,8 +1,11 @@
 import com.boringguys.constantcontact.v2.AccountService;
 import com.boringguys.constantcontact.v2.ApiV2;
+import com.boringguys.constantcontact.v2.CampaignService;
 import com.boringguys.constantcontact.v2.ContactService;
 import com.constantcontact.v2.account.AccountAddress;
 import com.constantcontact.v2.account.AccountSummaryInformation;
+import com.constantcontact.v2.campaigns.Campaign;
+import com.constantcontact.v2.campaigns.CampaignStatus;
 import com.constantcontact.v2.contacts.Contact;
 import com.constantcontact.v2.contacts.ContactList;
 
@@ -31,17 +34,18 @@ public class ApiMain
         getApiConfig();
 
         // Get the info on your Constant Contact account and print it
+        System.out.println("Fetching account info");
+        System.out.println("--------------------------------");
         AccountService accountService = new AccountService(apiKey, apiToken);
         AccountSummaryInformation summary = accountService.getAccountSummary();
         printAccountSummaryInformation(summary);
 
-        // TODO split out campaign service
-
-        ApiV2 api = new ApiV2(apiKey, apiToken);
 
         ContactService contactService = new ContactService(apiKey, apiToken);
 
         // Get all your existing contact lists and print them
+        System.out.println("Fetching contact lists");
+        System.out.println("--------------------------------");
         List<ContactList> lists = contactService.getContactLists();
         printContactLists(lists);
 
@@ -63,6 +67,12 @@ public class ApiMain
         contacts.forEach(a -> printContact(a));
 
 
+        // Get Sent Campaigns (likewise, All, Draft, Deleted, Running, Scheduled, Deleted
+        System.out.println("Fetching Sent Campaigns");
+        System.out.println("--------------------------------");
+        CampaignService campaignService = new CampaignService(apiKey, apiToken);
+        List<Campaign> campaigns = campaignService.getSentCampaigns();
+        campaigns.forEach(a -> System.out.println(a.getName()));
     }
 
     /**
