@@ -23,13 +23,13 @@ public class ApiMain
     private int fetchLimit;
     private int millisToSleepBetweenRequests = 2000;
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws Exception
     {
         ApiMain main = new ApiMain();
     }
 
 
-    ApiMain()
+    ApiMain() throws Exception
     {
         getApiConfig();
 
@@ -68,11 +68,28 @@ public class ApiMain
 
 
         // Get Sent Campaigns (likewise, All, Draft, Deleted, Running, Scheduled, Deleted
-        System.out.println("Fetching Sent Campaigns");
+        System.out.println("Fetching Draft Campaigns");
         System.out.println("--------------------------------");
         CampaignService campaignService = new CampaignService(apiKey, apiToken);
-        List<Campaign> campaigns = campaignService.getSentCampaigns();
+        List<Campaign> campaigns = campaignService.getDraftCampaigns();
         campaigns.forEach(a -> System.out.println(a.getName()));
+
+        // Get the details on a campaign
+        System.out.println("Fetching campaign");
+        System.out.println("--------------------------------");
+        Campaign campaign = campaignService.getCampaign(campaigns.get(0).getId());
+        printCampaign(campaign);
+
+        // TODO returning nulls from api is ugly, please update
+    }
+
+
+    private void printCampaign(Campaign campaign)
+    {
+        System.out.println(campaign.getId() + "," +
+                campaign.getName() + "," +
+                campaign.getSubject() + "," +
+                campaign.getCreatedDate());
     }
 
     /**
@@ -166,7 +183,7 @@ public class ApiMain
     /**
      * sets config values for API key and token
      */
-    private void getApiConfig()
+    private void getApiConfig() throws Exception
     {
         Properties prop = new Properties();
         InputStream input = null;
@@ -174,7 +191,17 @@ public class ApiMain
 
             input = new FileInputStream("config.properties");
             prop.load(input);
+
+            if (prop.getProperty("api_key").equals("your_key_here"))
+            {
+                throw new Exception("Please update your API key in config.properties");
+            }
             this.apiKey = prop.getProperty("api_key");
+
+            if (prop.getProperty("api_token").equals("your_token_here"))
+            {
+                throw new Exception("Please update your API token in config.properties");
+            }
             this.apiToken = prop.getProperty("api_token");
             this.dateCreated = prop.getProperty("date_created");
             this.fetchLimit = Integer.parseInt(prop.getProperty("fetch_limit"));
@@ -190,5 +217,7 @@ public class ApiMain
                 }
             }
         }
+
+
     }
 }

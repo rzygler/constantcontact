@@ -27,11 +27,33 @@ public class CampaignService
         this.conn = service.getApiConn();
     }
 
-    // @GET("v2/emailmarketing/campaigns/{campaignId}")
-    // Call<Campaign> getCampaign(@Path("campaignId") String campaignId, @Query("updateSummary") boolean updateSummary);
-    //
-    //
-    //
+
+    /**
+     * @GET("v2/emailmarketing/campaigns/{campaignId}")
+     * Call<Campaign> getCampaign(@Path("campaignId") String campaignId, @Query("updateSummary") boolean updateSummary);
+     *
+     * @param campaignId    string of the campaign id
+     * @return              campaign
+     */
+    public Campaign getCampaign(String campaignId)
+    {
+        Campaign campaign = null;
+
+        try
+        {
+            com.constantcontact.v2.CampaignService campaignService = conn.getCampaignService();
+
+            // synchronous method
+            campaign = campaignService.getCampaign(campaignId, true).execute().body();
+
+            return campaign;
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return campaign;
+    }
+
 
     /**
      *
@@ -110,6 +132,11 @@ public class CampaignService
             // synchronous method
             Paged<Campaign> pagedCampaigns = campaignService.getCampaigns(limit, status).execute().body();
 
+            if (pagedCampaigns == null)
+            {
+                return campaigns;
+            }
+
             if (pagedCampaigns.getResults().size() > 0)
             {
                 campaigns.addAll(pagedCampaigns.getResults());
@@ -118,7 +145,7 @@ public class CampaignService
             // keep fetching another batch until there are no more
             while (pagedCampaigns.getNextLink() != null)
             {
-                System.out.println(pagedCampaigns.getNextLink());
+                // System.out.println(pagedCampaigns.getNextLink());
                 Thread.sleep(millisToSleepBetweenRequests);
                 pagedCampaigns = campaignService.getCampaigns(pagedCampaigns.getNextLink()).execute().body();
                 campaigns.addAll(pagedCampaigns.getResults());
@@ -141,8 +168,6 @@ public class CampaignService
     // @GET("v2/emailmarketing/campaigns")
     // Call<Paged<Campaign>> getCampaigns(@Query("limit") int limit, @Query("modified_since") QueryDate date, @Query("status") CampaignStatus status);
     //
-    // @GET
-    // Call<Paged<Campaign>> getCampaigns(@Url String nextLink);
     //
     // @POST("v2/emailmarketing/campaigns")
     // Call<Campaign> createCampaign(@Body Campaign campaign);
