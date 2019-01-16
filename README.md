@@ -43,7 +43,7 @@ List<Campaign> campaigns = campaignService.getDraftCampaigns();
 campaigns.forEach(a -> System.out.println(a.getName()));
 ```
 
-***Fetch all sent campaigns**
+**Fetch all sent campaigns**
 ```java
 CampaignService campaignService = new CampaignService(apiKey, apiToken);
 List<Campaign> campaigns = campaignService.getSentCampaigns();
