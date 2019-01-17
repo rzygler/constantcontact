@@ -2,11 +2,15 @@ package com.boringguys.constantcontact.v2;
 
 import com.constantcontact.v2.CCApi2;
 import com.constantcontact.v2.Paged;
+import com.constantcontact.v2.QueryDate;
 import com.constantcontact.v2.campaigns.Campaign;
 import com.constantcontact.v2.campaigns.CampaignStatus;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -17,6 +21,7 @@ public class CampaignService
     int millisToSleepBetweenRequests = 4000;
 
     /**
+     * Constructor for CampaignService
      *
      * @param apiKey    Constant Contact developer api key
      * @param apiToken  Constant Contact developer token
@@ -29,8 +34,7 @@ public class CampaignService
 
 
     /**
-     * @GET("v2/emailmarketing/campaigns/{campaignId}")
-     * Call<Campaign> getCampaign(@Path("campaignId") String campaignId, @Query("updateSummary") boolean updateSummary);
+     * Get one campaign by the campaign id
      *
      * @param campaignId    string of the campaign id
      * @return              campaign
@@ -56,6 +60,7 @@ public class CampaignService
 
 
     /**
+     * Get all the email campaigns
      *
      * @return  list of all campaigns
      */
@@ -65,6 +70,18 @@ public class CampaignService
     }
 
     /**
+     * Get all the email campaigns since date
+     *
+     * @param sinceDate     string of time to search after yyyy/MM/dd HH:mm:ss
+     * @return              list of all campaigns
+     */
+    public List<Campaign> getAllCampaigns(String sinceDate)
+    {
+        return getCampaigns(50, sinceDate, CampaignStatus.ALL);
+    }
+
+    /**
+     * Get the "draft" email campaigns
      *
      * @return  list of draft campaigns
      */
@@ -74,6 +91,18 @@ public class CampaignService
     }
 
     /**
+     * Get the "draft" email campaigns since date
+     *
+     * @param sinceDate     string of time to search after yyyy/MM/dd HH:mm:ss
+     * @return              list of all campaigns
+     */
+    public List<Campaign> getDraftCampaigns(String sinceDate)
+    {
+        return getCampaigns(50, sinceDate, CampaignStatus.DRAFT);
+    }
+
+    /**
+     * Get the "running" email campaigns
      *
      * @return  list of running Campaigns
      */
@@ -83,6 +112,18 @@ public class CampaignService
     }
 
     /**
+     * Get the "running" email campaigns since date
+     *
+     * @param sinceDate     string of time to search after yyyy/MM/dd HH:mm:ss
+     * @return              list of all campaigns
+     */
+    public List<Campaign> getRunningCampaigns(String sinceDate)
+    {
+        return getCampaigns(50, sinceDate, CampaignStatus.RUNNING);
+    }
+
+    /**
+     * Get the "sent" email campaigns
      *
      * @return  list of sent campaigns
      */
@@ -92,6 +133,19 @@ public class CampaignService
     }
 
     /**
+     * Get the "sent" email campaigns since date
+     *
+     * @param sinceDate     string of time to search after yyyy/MM/dd HH:mm:ss
+     * @return              list of all campaigns
+     */
+    public List<Campaign> getSentCampaigns(String sinceDate)
+    {
+        return getCampaigns(50, sinceDate, CampaignStatus.SENT);
+    }
+
+
+    /**
+     * Get the "scheduled" email campaigns
      *
      * @return  list of scheduled campaigns
      */
@@ -101,6 +155,19 @@ public class CampaignService
     }
 
     /**
+     * Get the "scheduled" email campaigns since date
+     *
+     * @param sinceDate     string of time to search after yyyy/MM/dd HH:mm:ss
+     * @return              list of all campaigns
+     */
+    public List<Campaign> getScheduledCampaigns(String sinceDate)
+    {
+        return getCampaigns(50, sinceDate, CampaignStatus.SCHEDULED);
+    }
+
+
+    /**
+     * Get the "deleted" email campaigns
      *
      * @return  list of deleted campaigns
      */
@@ -110,8 +177,19 @@ public class CampaignService
     }
 
     /**
-     * GET("v2/emailmarketing/campaigns")
-     * Call<Paged<Campaign>> getCampaigns(@Query("limit") int limit, @Query("status") CampaignStatus status);
+     * Get the "deleted" email campaigns since date
+     *
+     * @param sinceDate     string of time to search after yyyy/MM/dd HH:mm:ss
+     * @return              list of all campaigns
+     */
+    public List<Campaign> getDeletedCampaigns(String sinceDate)
+    {
+        return getCampaigns(50, sinceDate, CampaignStatus.DELETED);
+    }
+
+
+    /**
+     * Get the email campaigns by their campaign status
      *
      * @param limit     size of page to return, max 50
      * @param status    enum of     ALL, DRAFT, RUNNING, SENT, SCHEDULED, DELETED
@@ -165,9 +243,70 @@ public class CampaignService
     }
 
 
-    // @GET("v2/emailmarketing/campaigns")
-    // Call<Paged<Campaign>> getCampaigns(@Query("limit") int limit, @Query("modified_since") QueryDate date, @Query("status") CampaignStatus status);
-    //
+    /**
+     * Get the email campaigns by their campaign status and date since
+     *
+     * @param limit     size of page to return, max 50
+     * @param theDate   string of time to search after yyyy/MM/dd HH:mm:ss
+     * @param status    enum of     ALL, DRAFT, RUNNING, SENT, SCHEDULED, DELETED
+     * @return          list of campaigns
+     */
+    public List<Campaign> getCampaigns(int limit, String theDate, CampaignStatus status)
+    {
+        if (limit > 50)
+            limit = 50;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = null;
+        try
+        {
+            date = sdf.parse(theDate);
+        } catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+        QueryDate queryDate = new QueryDate(date);
+
+        List<Campaign> campaigns = new ArrayList<>();
+
+        try
+        {
+            com.constantcontact.v2.CampaignService campaignService = conn.getCampaignService();
+
+            // synchronous method
+            Paged<Campaign> pagedCampaigns = campaignService.getCampaigns(limit, queryDate, status).execute().body();
+
+            if (pagedCampaigns == null)
+            {
+                return campaigns;
+            }
+
+            if (pagedCampaigns.getResults().size() > 0)
+            {
+                campaigns.addAll(pagedCampaigns.getResults());
+            }
+
+            // keep fetching another batch until there are no more
+            while (pagedCampaigns.getNextLink() != null)
+            {
+                System.out.println(pagedCampaigns.getNextLink());
+                Thread.sleep(millisToSleepBetweenRequests);
+                pagedCampaigns = campaignService.getCampaigns(pagedCampaigns.getNextLink()).execute().body();
+                campaigns.addAll(pagedCampaigns.getResults());
+            }
+
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        } catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
+        return campaigns;
+
+    }
+
     //
     // @POST("v2/emailmarketing/campaigns")
     // Call<Campaign> createCampaign(@Body Campaign campaign);

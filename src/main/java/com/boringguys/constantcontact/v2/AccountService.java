@@ -15,6 +15,7 @@ public class AccountService
     private CCApi2 conn;
 
     /**
+     * Constructor for Account Service
      *
      * @param apiKey    Constant Contact developer api key
      * @param apiToken  Constant Contact developer token
@@ -27,6 +28,7 @@ public class AccountService
 
 
     /**
+     * Get the account summary information
      *
      * @return  The account summary information
      */
@@ -55,6 +57,7 @@ public class AccountService
     }
 
     /**
+     * Update the account summary information
      *
      * @return  The account summary information
      * @throws NotImplementedException
@@ -65,6 +68,7 @@ public class AccountService
     }
 
     /**
+     * List the account email addresses
      *
      * @return  The account summary information
      * @throws NotImplementedException
@@ -75,6 +79,7 @@ public class AccountService
     }
 
     /**
+     * Create an account email address
      *
      * @return  The account summary information
      * @throws NotImplementedException

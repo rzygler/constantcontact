@@ -20,6 +20,7 @@ public class ContactService
     int millisToSleepBetweenRequests = 4000;
 
     /**
+     * Constructor for Contact Service
      *
      * @param apiKey    Constant Contact developer api key
      * @param apiToken  Constant Contact developer token
@@ -48,6 +49,7 @@ public class ContactService
     // Call<SignupFormResponse> createCustomSignupForm(@Body SignupFormRequest signupFormRequest);
 
     /**
+     * Get all the contact lists
      *
      * @return              List of contact lists
      */
@@ -80,6 +82,7 @@ public class ContactService
 
 
     /**
+     * Get the email contacts for the list
      *
      * @param listId        String id of the list
      * @param limit         how many to return
@@ -133,6 +136,7 @@ public class ContactService
 
 
     /**
+     * Get the contacts by email address
      *
      * @param email         email address we are querying for
      * @return              a list of email contacts

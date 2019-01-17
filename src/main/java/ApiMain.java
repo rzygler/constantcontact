@@ -1,13 +1,11 @@
-import com.boringguys.constantcontact.v2.AccountService;
-import com.boringguys.constantcontact.v2.ApiV2;
-import com.boringguys.constantcontact.v2.CampaignService;
-import com.boringguys.constantcontact.v2.ContactService;
+import com.boringguys.constantcontact.v2.*;
 import com.constantcontact.v2.account.AccountAddress;
 import com.constantcontact.v2.account.AccountSummaryInformation;
 import com.constantcontact.v2.campaigns.Campaign;
 import com.constantcontact.v2.campaigns.CampaignStatus;
 import com.constantcontact.v2.contacts.Contact;
 import com.constantcontact.v2.contacts.ContactList;
+import com.constantcontact.v2.tracking.TrackingSummary;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -21,7 +19,6 @@ public class ApiMain
     private String apiToken;
     private String dateCreated;
     private int fetchLimit;
-    private int millisToSleepBetweenRequests = 2000;
 
     public static void main(String[] args) throws Exception
     {
@@ -31,14 +28,16 @@ public class ApiMain
 
     ApiMain() throws Exception
     {
+        // TODO returning nulls from api is ugly
+
         getApiConfig();
 
         // Get the info on your Constant Contact account and print it
         System.out.println("Fetching account info");
         System.out.println("--------------------------------");
         AccountService accountService = new AccountService(apiKey, apiToken);
-        AccountSummaryInformation summary = accountService.getAccountSummary();
-        printAccountSummaryInformation(summary);
+        AccountSummaryInformation summaryInfo = accountService.getAccountSummary();
+        printAccountSummaryInformation(summaryInfo);
 
 
         ContactService contactService = new ContactService(apiKey, apiToken);
@@ -66,29 +65,54 @@ public class ApiMain
         List<Contact> contacts = contactService.getContactsByEmail("homer.simpson@gmail.com");
         contacts.forEach(a -> printContact(a));
 
-
-        // Get Sent Campaigns (likewise, All, Draft, Deleted, Running, Scheduled, Deleted
+        // Get Draft Campaigns (likewise, All, Deleted, Draft, Deleted, Running, Scheduled, Sent
         System.out.println("Fetching Draft Campaigns");
         System.out.println("--------------------------------");
         CampaignService campaignService = new CampaignService(apiKey, apiToken);
         List<Campaign> campaigns = campaignService.getDraftCampaigns();
         campaigns.forEach(a -> System.out.println(a.getName()));
 
+
+        System.out.println("Fetching Sent Campaigns since 1/1/2019");
+        System.out.println("--------------------------------");
+        CampaignService campaignService2 = new CampaignService(apiKey, apiToken);
+        List<Campaign> campaigns2 = campaignService2.getCampaigns(
+                50, "2019/01/01 00:00:01", CampaignStatus.SENT);
+        campaigns2.forEach(a -> printCampaign(a));
+
         // Get the details on a campaign
         System.out.println("Fetching campaign");
         System.out.println("--------------------------------");
-        Campaign campaign = campaignService.getCampaign(campaigns.get(0).getId());
+        Campaign campaign = campaignService.getCampaign(campaigns2.get(0).getId());
         printCampaign(campaign);
 
-        // TODO returning nulls from api is ugly, please update
+        System.out.println("Fetching campaign stats...");
+        System.out.println("--------------------------------");
+        CampaignTrackingService tracking = new CampaignTrackingService(apiKey, apiToken);
+        TrackingSummary summary = tracking.getTrackingSummary(campaigns2.get(0).getId());
+
+
+
     }
 
+    private void printCampaignTrackingSummary(TrackingSummary summary)
+    {
+        System.out.println("Sends: " + summary.getSends());
+        System.out.println("Opens: " + summary.getOpens());
+        System.out.println("Clicks: " + summary.getClicks());
+        System.out.println("Bounces: " + summary.getBounces());
+        System.out.println("Forwards: " + summary.getForwards());
+        System.out.println("Spams: " + summary.getSpamCount());
+        System.out.println("Unsubs: " + summary.getUnsubscribes());
+
+    }
 
     private void printCampaign(Campaign campaign)
     {
         System.out.println(campaign.getId() + "," +
                 campaign.getName() + "," +
                 campaign.getSubject() + "," +
+                campaign.getPermalinkUrl() + "," +
                 campaign.getCreatedDate());
     }
 
