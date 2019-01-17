@@ -49,7 +49,12 @@ CampaignService campaignService = new CampaignService(apiKey, apiToken);
 List<Campaign> campaigns = campaignService.getSentCampaigns();
 campaigns.forEach(a -> System.out.println(a.getName()));
 ```
-
+**Fetch sent campaigns since 1/1/2019**
+```java
+CampaignService campaignService = new CampaignService(apiKey, apiToken);
+List<Campaign> campaigns = campaignService.getSentCampaigns("2019/01/01 00:00:01");
+campaigns.forEach(a -> System.out.println(a.getName()));
+```
 **Fetch a campaign**
 ```java
 CampaignService campaignService = new CampaignService(apiKey, apiToken);
