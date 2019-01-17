@@ -76,21 +76,20 @@ public class ApiMain
         System.out.println("Fetching Sent Campaigns since 1/1/2019");
         System.out.println("--------------------------------");
         CampaignService campaignService2 = new CampaignService(apiKey, apiToken);
-        List<Campaign> campaigns2 = campaignService2.getCampaigns(
-                50, "2019/01/01 00:00:01", CampaignStatus.SENT);
+        List<Campaign> campaigns2 = campaignService2.getSentCampaigns("2019/01/01");
         campaigns2.forEach(a -> printCampaign(a));
 
         // Get the details on a campaign
         System.out.println("Fetching campaign");
         System.out.println("--------------------------------");
-        Campaign campaign = campaignService.getCampaign(campaigns2.get(0).getId());
+        Campaign campaign = campaignService2.getCampaign(campaigns2.get(0).getId());
         printCampaign(campaign);
 
         System.out.println("Fetching campaign stats...");
         System.out.println("--------------------------------");
         CampaignTrackingService tracking = new CampaignTrackingService(apiKey, apiToken);
         TrackingSummary summary = tracking.getTrackingSummary(campaigns2.get(0).getId());
-
+        printCampaignTrackingSummary(summary);
 
 
     }

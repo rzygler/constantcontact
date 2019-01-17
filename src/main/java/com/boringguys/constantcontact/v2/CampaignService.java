@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -75,7 +76,7 @@ public class CampaignService
      * @param sinceDate     string of time to search after yyyy/MM/dd HH:mm:ss
      * @return              list of all campaigns
      */
-    public List<Campaign> getAllCampaigns(String sinceDate)
+    public List<Campaign> getAllCampaigns(String sinceDate) throws Exception
     {
         return getCampaigns(50, sinceDate, CampaignStatus.ALL);
     }
@@ -96,7 +97,7 @@ public class CampaignService
      * @param sinceDate     string of time to search after yyyy/MM/dd HH:mm:ss
      * @return              list of all campaigns
      */
-    public List<Campaign> getDraftCampaigns(String sinceDate)
+    public List<Campaign> getDraftCampaigns(String sinceDate) throws Exception
     {
         return getCampaigns(50, sinceDate, CampaignStatus.DRAFT);
     }
@@ -117,7 +118,7 @@ public class CampaignService
      * @param sinceDate     string of time to search after yyyy/MM/dd HH:mm:ss
      * @return              list of all campaigns
      */
-    public List<Campaign> getRunningCampaigns(String sinceDate)
+    public List<Campaign> getRunningCampaigns(String sinceDate) throws Exception
     {
         return getCampaigns(50, sinceDate, CampaignStatus.RUNNING);
     }
@@ -138,7 +139,7 @@ public class CampaignService
      * @param sinceDate     string of time to search after yyyy/MM/dd HH:mm:ss
      * @return              list of all campaigns
      */
-    public List<Campaign> getSentCampaigns(String sinceDate)
+    public List<Campaign> getSentCampaigns(String sinceDate) throws Exception
     {
         return getCampaigns(50, sinceDate, CampaignStatus.SENT);
     }
@@ -160,7 +161,7 @@ public class CampaignService
      * @param sinceDate     string of time to search after yyyy/MM/dd HH:mm:ss
      * @return              list of all campaigns
      */
-    public List<Campaign> getScheduledCampaigns(String sinceDate)
+    public List<Campaign> getScheduledCampaigns(String sinceDate) throws Exception
     {
         return getCampaigns(50, sinceDate, CampaignStatus.SCHEDULED);
     }
@@ -182,7 +183,7 @@ public class CampaignService
      * @param sinceDate     string of time to search after yyyy/MM/dd HH:mm:ss
      * @return              list of all campaigns
      */
-    public List<Campaign> getDeletedCampaigns(String sinceDate)
+    public List<Campaign> getDeletedCampaigns(String sinceDate) throws Exception
     {
         return getCampaigns(50, sinceDate, CampaignStatus.DELETED);
     }
@@ -242,6 +243,26 @@ public class CampaignService
 
     }
 
+    private Date checkDateFormat(String theDate)
+    {
+        List<String> formatStrings = Arrays.asList(
+                "yyyy/MM/dd HH:mm:ss",
+                "yyyy/MM/dd"
+        );
+
+        for (String formatString : formatStrings)
+        {
+            try
+            {
+                return new SimpleDateFormat(formatString).parse(theDate);
+            }
+            catch (ParseException e) {}
+        }
+
+        return null;
+
+    }
+
 
     /**
      * Get the email campaigns by their campaign status and date since
@@ -251,20 +272,17 @@ public class CampaignService
      * @param status    enum of     ALL, DRAFT, RUNNING, SENT, SCHEDULED, DELETED
      * @return          list of campaigns
      */
-    public List<Campaign> getCampaigns(int limit, String theDate, CampaignStatus status)
+    public List<Campaign> getCampaigns(int limit, String theDate, CampaignStatus status) throws Exception
     {
         if (limit > 50)
             limit = 50;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        Date date = null;
-        try
+        Date date = checkDateFormat(theDate);
+        if (date == null)
         {
-            date = sdf.parse(theDate);
-        } catch (ParseException e)
-        {
-            e.printStackTrace();
+            throw new Exception("Date format needs to be:   yyyy/MM/dd HH:mm:ss  OR   yyyy/MM/dd");
         }
+
         QueryDate queryDate = new QueryDate(date);
 
         List<Campaign> campaigns = new ArrayList<>();
