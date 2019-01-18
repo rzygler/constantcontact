@@ -65,5 +65,4 @@ System.out.println(campaign.getId() + "," +
                 campaign.getCreatedDate())
 ```
 
-More examples in [console example](https://github.com/rzygler/constantcontact/blob/master/src/main/java/ApiMain.java)
-
+More examples in tests...
