@@ -2,6 +2,7 @@ package com.boringguys.constantcontact.v2;
 
 import com.constantcontact.v2.account.AccountAddress;
 import com.constantcontact.v2.account.AccountSummaryInformation;
+import com.constantcontact.v2.campaigns.Campaign;
 import com.constantcontact.v2.contacts.Contact;
 import com.constantcontact.v2.contacts.ContactList;
 
@@ -146,6 +147,18 @@ public class Helper
         sb.append(contact.getEmailAddresses()[0].getEmailAddress() + "," +
                 contact.getFirstName() + ","
                 + contact.getLastName() );
+        System.out.println(sb.toString());
+    }
+
+    public static void printCampaign(Campaign campaign)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append(campaign.getId() + "," +
+                campaign.getName() + "," +
+                campaign.getSubject() + "," +
+                campaign.getPermalinkUrl() + "," +
+                campaign.getCreatedDate());
+
         System.out.println(sb.toString());
     }
 }

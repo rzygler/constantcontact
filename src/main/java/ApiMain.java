@@ -31,23 +31,11 @@ public class ApiMain
 
         getApiConfig();
 
-        // Get Draft Campaigns (likewise, All, Deleted, Draft, Deleted, Running, Scheduled, Sent
-        System.out.println("Fetching Draft Campaigns");
-        System.out.println("--------------------------------");
-        CampaignService campaignService = new CampaignService(apiKey, apiToken);
-        List<Campaign> campaigns = campaignService.getDraftCampaigns();
-        campaigns.forEach(a -> System.out.println(a.getName()));
-
-
-        System.out.println("Fetching Sent Campaigns since 1/1/2019");
-        System.out.println("--------------------------------");
-        CampaignService campaignService2 = new CampaignService(apiKey, apiToken);
-        List<Campaign> campaigns2 = campaignService2.getSentCampaigns("2019/01/01");
-        campaigns2.forEach(a -> printCampaign(a));
-
         // Get the details on a campaign
         System.out.println("Fetching campaign");
         System.out.println("--------------------------------");
+        CampaignService campaignService2 = new CampaignService(apiKey, apiToken);
+        List<Campaign> campaigns2 = campaignService2.getSentCampaigns("2019/01/01");
         Campaign campaign = campaignService2.getCampaign(campaigns2.get(0).getId());
         printCampaign(campaign);
 
