@@ -7,7 +7,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,56 +16,15 @@ import static org.junit.jupiter.api.Assertions.assertTimeout;
 import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import java.util.Map;
 
 public class TestAccountService
 {
     private String apiKey;
     private String apiToken;
     private String dateCreated;
-    private int fetchLimit;
+    private boolean showDebug = false;
 
-    /**
-     * sets config values for API key and token
-     */
-    private void getApiConfig() throws Exception
-    {
-        Properties prop = new Properties();
-        InputStream input = null;
-        try {
-
-            input = new FileInputStream("config.properties");
-            prop.load(input);
-
-            if (prop.getProperty("api_key").equals("your_key_here"))
-            {
-                throw new Exception("Please update your API key in config.properties");
-            }
-            this.apiKey = prop.getProperty("api_key");
-
-            if (prop.getProperty("api_token").equals("your_token_here"))
-            {
-                throw new Exception("Please update your API token in config.properties");
-            }
-            this.apiToken = prop.getProperty("api_token");
-            this.dateCreated = prop.getProperty("date_created");
-            this.fetchLimit = Integer.parseInt(prop.getProperty("fetch_limit"));
-
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        } finally {
-            if (input != null) {
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
     @BeforeAll
     static void initAll()
     {
@@ -76,11 +34,15 @@ public class TestAccountService
     @BeforeEach
     void init() throws Exception
     {
-        getApiConfig();
+        Map<String, String> configs = Helper.getApiConfig();
+        this.apiKey = configs.get("apiKey");
+        this.apiToken = configs.get("apiToken");
+        this.dateCreated = configs.get("dateCreated");
+        this.showDebug = Boolean.parseBoolean(configs.get("showDebug"));
     }
 
     @Test
-    void TestAccountSummaryInformationIsFetched()
+    void testAccountSummaryInformationIsFetched()
     {
         AccountService accountService = new AccountService(apiKey, apiToken);
         AccountSummaryInformation summaryInfo = accountService.getAccountSummary();
@@ -98,24 +60,29 @@ public class TestAccountService
         assertTrue(address.getCity().length() >= 4);
         assertTrue(address.getState().length() >= 4);
         assertTrue(address.getPostalCode().length() >=5 );
+
+        if (showDebug)
+        {
+            Helper.printAccountSummaryInformation(summaryInfo);
+        }
     }
 
     @Test
-    void TestUpdateAccountSummaryInformation()
+    void testUpdateAccountSummaryInformation()
     {
         AccountService accountService = new AccountService(apiKey, apiToken);
         assertThrows(NotImplementedException.class, () -> accountService.updateAccountSummaryInformation() );
     }
 
     @Test
-    void TestCreateAccountEmailAddress()
+    void testCreateAccountEmailAddress()
     {
         AccountService accountService = new AccountService(apiKey, apiToken);
         assertThrows(NotImplementedException.class, () -> accountService.createAccountEmailAddress() );
     }
 
     @Test
-    void TestGetAccountEmailAddresses()
+    void testGetAccountEmailAddresses()
     {
         AccountService accountService = new AccountService(apiKey, apiToken);
         assertThrows(NotImplementedException.class, () -> accountService.getAccountEmailAddresses() );
