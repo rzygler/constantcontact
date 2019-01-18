@@ -16,6 +16,15 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
     compile 'com.constantcontact:java-sdk:5.2.2-SNAPSHOT'
+    testCompile('org.junit.jupiter:junit-jupiter-api:5.3.2')
+    testCompile('org.junit.jupiter:junit-jupiter-params:5.3.2')
+    testRuntime('org.junit.jupiter:junit-jupiter-engine:5.3.2')
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }

@@ -91,6 +91,11 @@ public class ApiMain
         TrackingSummary summary = tracking.getTrackingSummary(campaigns2.get(0).getId());
         printCampaignTrackingSummary(summary);
 
+        System.out.println("Creating contact list");
+        System.out.println("--------------------------------");
+        ContactService contactServiceForCreate = new ContactService(apiKey, apiToken);
+        contactServiceForCreate.createContactList();
+
 
     }
 
@@ -240,7 +245,5 @@ public class ApiMain
                 }
             }
         }
-
-
     }
 }

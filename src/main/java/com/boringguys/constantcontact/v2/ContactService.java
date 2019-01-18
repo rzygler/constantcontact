@@ -5,6 +5,9 @@ import com.constantcontact.v2.Paged;
 import com.constantcontact.v2.QueryDate;
 import com.constantcontact.v2.contacts.Contact;
 import com.constantcontact.v2.contacts.ContactList;
+import com.constantcontact.v2.contacts.ContactListStatus;
+import retrofit2.Call;
+import retrofit2.Response;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -78,7 +81,48 @@ public class ContactService
         return lists;
     }
 
+//     @POST("v2/lists")
+//    Call<ContactList> createContactList(@Body ContactList contactList);
+    public ContactList createContactList()
+    {
+        ContactList list = new ContactList();
+        ContactList newList = null;
+        // list.setName("aaaa");
+        list.setStatus(ContactListStatus.ACTIVE);
 
+        try
+        {
+            com.constantcontact.v2.ContactService contactService = conn.getContactService();
+            // System.out.println(contactService.createContactList(list).execute().body());
+            Call<ContactList> call = contactService.createContactList(list);
+            Response<ContactList> response = call.execute();
+            System.out.println("message: " + response.message());
+            System.out.println("code: " + response.code());
+            System.out.println(response);
+
+            // Good
+            // message: Created
+            // code: 201
+
+            // duplicate
+            // message: Conflict
+            // code: 409
+
+            // list.status not set so error
+            // message: Bad Request
+            // code: 400
+
+
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return newList;
+    }
 
 
     /**
