@@ -3,7 +3,7 @@ Java wrapper for Constant Contact API v2. Sparse, but working.
 
 ## Build instructions
 * The API v2 from Constant Contact uses Gradle for build so you will need to use that as well to build this code
-* Update config.properties with your key and token from Constant Contact developer portal
+* Update config.properties with your key and token from Constant Contact developer portal to run tests
 * Enjoy!
 
 ## Help with the rest
