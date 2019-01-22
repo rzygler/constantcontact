@@ -31,19 +31,6 @@ public class ApiMain
 
         getApiConfig();
 
-        // Get the details on a campaign
-        System.out.println("Fetching campaign");
-        System.out.println("--------------------------------");
-        CampaignService campaignService2 = new CampaignService(apiKey, apiToken);
-        List<Campaign> campaigns2 = campaignService2.getSentCampaigns("2019/01/01");
-        Campaign campaign = campaignService2.getCampaign(campaigns2.get(0).getId());
-        printCampaign(campaign);
-
-        System.out.println("Fetching campaign stats...");
-        System.out.println("--------------------------------");
-        CampaignTrackingService tracking = new CampaignTrackingService(apiKey, apiToken);
-        TrackingSummary summary = tracking.getTrackingSummary(campaigns2.get(0).getId());
-        printCampaignTrackingSummary(summary);
 
         System.out.println("Creating contact list");
         System.out.println("--------------------------------");
@@ -53,26 +40,6 @@ public class ApiMain
 
     }
 
-    private void printCampaignTrackingSummary(TrackingSummary summary)
-    {
-        System.out.println("Sends: " + summary.getSends());
-        System.out.println("Opens: " + summary.getOpens());
-        System.out.println("Clicks: " + summary.getClicks());
-        System.out.println("Bounces: " + summary.getBounces());
-        System.out.println("Forwards: " + summary.getForwards());
-        System.out.println("Spams: " + summary.getSpamCount());
-        System.out.println("Unsubs: " + summary.getUnsubscribes());
-
-    }
-
-    private void printCampaign(Campaign campaign)
-    {
-        System.out.println(campaign.getId() + "," +
-                campaign.getName() + "," +
-                campaign.getSubject() + "," +
-                campaign.getPermalinkUrl() + "," +
-                campaign.getCreatedDate());
-    }
 
 
     /**

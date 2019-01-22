@@ -5,6 +5,7 @@ import com.constantcontact.v2.account.AccountSummaryInformation;
 import com.constantcontact.v2.campaigns.Campaign;
 import com.constantcontact.v2.contacts.Contact;
 import com.constantcontact.v2.contacts.ContactList;
+import com.constantcontact.v2.tracking.TrackingSummary;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -159,6 +160,30 @@ public class Helper
                 campaign.getPermalinkUrl() + "," +
                 campaign.getCreatedDate());
 
+        System.out.println(sb.toString());
+    }
+
+    public static void printCampaignTrackingSummary(TrackingSummary summary)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Fetching campaign stats...");
+        sb.append(System.getProperty("line.separator"));
+        sb.append("--------------------------------");
+        sb.append(System.getProperty("line.separator"));
+        sb.append("Sends: " + summary.getSends());
+        sb.append(System.getProperty("line.separator"));
+        sb.append("Opens: " + summary.getOpens());
+        sb.append(System.getProperty("line.separator"));
+        sb.append("Clicks: " + summary.getClicks());
+        sb.append(System.getProperty("line.separator"));
+        sb.append("Bounces: " + summary.getBounces());
+        sb.append(System.getProperty("line.separator"));
+        sb.append("Forwards: " + summary.getForwards());
+        sb.append(System.getProperty("line.separator"));
+        sb.append("Spams: " + summary.getSpamCount());
+        sb.append(System.getProperty("line.separator"));
+        sb.append("Unsubs: " + summary.getUnsubscribes());
+        sb.append(System.getProperty("line.separator"));
         System.out.println(sb.toString());
     }
 }

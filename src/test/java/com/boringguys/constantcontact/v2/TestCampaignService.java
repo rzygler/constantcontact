@@ -42,7 +42,7 @@ public class TestCampaignService
         assertNotNull(campaigns.get(0));
         assertTrue(campaigns.get(0).getName().length() >= 4);
         assertTrue(campaigns.get(0).getStatus().equals(CampaignStatus.DRAFT));
-        // TODO why is campaign data incomplete
+        // When we get the campaigns this way, they do not have every field populated
         // assertNotNull(campaigns.get(0).getCreatedDate());
         if(showDebug)
         {
@@ -121,7 +121,6 @@ public class TestCampaignService
     @Test
     void testGetOneCampaignSince()
     {
-        // public List<Campaign> getSentCampaigns(String sinceDate)
         CampaignService campaignService = new CampaignService(apiKey, apiToken);
         try
         {

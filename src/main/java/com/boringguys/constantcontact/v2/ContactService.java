@@ -85,6 +85,8 @@ public class ContactService
 //    Call<ContactList> createContactList(@Body ContactList contactList);
     public ContactList createContactList()
     {
+        // TODO: test createContactList
+
         ContactList list = new ContactList();
         ContactList newList = null;
         // list.setName("aaaa");
