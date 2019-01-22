@@ -48,10 +48,10 @@ public class ContactService
     //
     // Call<SignupFormResponse> createCustomSignupForm(@Body SignupFormRequest signupFormRequest);
 
-    public Contact createContact(Contact contact, OptInSource source)
-    {
+    //public Contact createContact(Contact contact, OptInSource source)
+   // {
 
-    }
+    //}
 
     public ContactList getContactList(String listId)
     {
