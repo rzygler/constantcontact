@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 public class ContactService
@@ -48,10 +49,7 @@ public class ContactService
     //
     // Call<SignupFormResponse> createCustomSignupForm(@Body SignupFormRequest signupFormRequest);
 
-    //public Contact createContact(Contact contact, OptInSource source)
-   // {
 
-    //}
 
     public ContactList getContactList(String listId)
     {
@@ -69,6 +67,37 @@ public class ContactService
         // give back empty list if none found
         return list;
     }
+
+    public ContactList getContactListByName(String name)
+    {
+        List<ContactList> lists = new ArrayList<>();
+        Optional<ContactList> result = null;
+
+        try
+        {
+            com.constantcontact.v2.ContactService contactService = conn.getContactService();
+
+            // fetching the lists gets ALL your lists at once
+            // no need to loop thru, oversight in their API design
+            lists = contactService.getContactLists(null).execute().body();
+
+            result = lists.stream()
+                    .filter(item -> item.getName().equals(name))
+                    .findFirst();
+                    //.collect(Collectors.toList());
+
+            if (result.isPresent())
+            {
+                return getContactList(result.get().getId());
+            }
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 
     /**
      * Get all the contact lists
@@ -124,6 +153,38 @@ public class ContactService
         return response;
     }
 
+    public Response<Contact> createContactByOwner(Contact contact)
+    {
+        return createContact(contact, OptInSource.ACTION_BY_OWNER);
+    }
+
+    public Response<Contact> createContactByVisitor(Contact contact)
+    {
+        return createContact(contact, OptInSource.ACTION_BY_VISITOR);
+    }
+
+
+    public Response<Contact> createContact(Contact contact, OptInSource source)
+    {
+        if (source == null)
+        {
+            source = OptInSource.ACTION_BY_OWNER;
+        }
+
+        Response<Contact> response = null;
+        try
+        {
+            com.constantcontact.v2.ContactService contactService = conn.getContactService();
+            Call<Contact> call = contactService.createContact(contact, source);
+            response = call.execute();
+            System.out.println(response);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
 
     /**
      * Create a new contact list

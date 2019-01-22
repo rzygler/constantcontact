@@ -8,6 +8,8 @@ import retrofit2.Response;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -76,6 +78,7 @@ public class TestContactListService
 
 
 
+
     @Test
     void testCreateContactListWithMissingNameIsBadRequest()
     {
@@ -83,8 +86,8 @@ public class TestContactListService
         String listName = null;
         ContactListStatus status = ContactListStatus.ACTIVE;
         Response<ContactList> response = contactServiceForCreate.createContactList(listName, status);
-        assertEquals(response.code(), 400);
-        assertEquals(response.message(), "Bad Request");
+        assertEquals(400, response.code());
+        assertEquals("Bad Request", response.message());
         assertNull(response.body());
     }
 
@@ -95,8 +98,8 @@ public class TestContactListService
         String listName = Helper.generateRandomString(10);
         ContactListStatus status = null;
         Response<ContactList> response = contactServiceForCreate.createContactList(listName, status);
-        assertEquals(response.code(), 400);
-        assertEquals(response.message(), "Bad Request");
+        assertEquals(400, response.code());
+        assertEquals("Bad Request", response.message());
         assertNull(response.body());
     }
 
@@ -113,8 +116,8 @@ public class TestContactListService
         // duplicate contact list
         Response<ContactList> response2 = contactServiceForCreate.createContactList(listName, status);
 
-        assertEquals(response2.code(), 409);
-        assertEquals(response2.message(), "Conflict");
+        assertEquals(409, response2.code());
+        assertEquals("Conflict", response2.message());
         assertNull(response2.body());
 
         // clean up
@@ -130,8 +133,8 @@ public class TestContactListService
         String listName = Helper.generateRandomString(10);
         ContactListStatus status = ContactListStatus.ACTIVE;
         Response<ContactList> response = service.createContactList(listName, status);
-        assertEquals(response.code(), 201);
-        assertEquals(response.message(), "Created");
+        assertEquals(201, response.code());
+        assertEquals("Created", response.message());
         assertNotNull(response.body());
 
         // Contact list is created and embedded in response.body
@@ -159,8 +162,38 @@ public class TestContactListService
         Thread.sleep(4000);
         ContactService service2 = new ContactService(apiKey, apiToken);
         Response deleteResponse = service2.deleteContactList(id);
-        assertEquals(deleteResponse.code(), 204);
+        assertEquals(204, deleteResponse.code());
     }
 
+
+    @Test
+    void testGetContactListByName() throws InterruptedException
+    {
+        ContactService service = new ContactService(apiKey, apiToken);
+        String name = Helper.generateRandomString(10);
+        ContactListStatus status = ContactListStatus.ACTIVE;
+        Response<ContactList> response = service.createContactList(name, status);
+        String id = response.body().getId();
+
+        // wait a bit
+        Thread.sleep(4000);
+
+        // now go find that list by name
+        ContactList list = service.getContactListByName(name);
+
+        if(showDebug)
+        {
+            Helper.printContactList(list);
+        }
+        assertNotNull(list);
+        assertEquals(name, list.getName());
+        assertNotNull(list.getCreatedDate());
+
+        // clean up
+        Thread.sleep(4000);
+        ContactService service2 = new ContactService(apiKey, apiToken);
+        Response deleteResponse = service2.deleteContactList(id);
+        assertEquals(204, deleteResponse.code());
+    }
 
 }

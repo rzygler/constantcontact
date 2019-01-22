@@ -2,6 +2,8 @@ package com.boringguys.constantcontact.v2;
 
 import com.constantcontact.v2.contacts.Contact;
 import com.constantcontact.v2.contacts.ContactList;
+import com.constantcontact.v2.contacts.ContactListMetaData;
+import com.constantcontact.v2.contacts.EmailAddress;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -74,13 +76,41 @@ public class TestContactService
     }
 
     // TODO: test creating a contact
-    // TODO: how to assign lists to contact
 
+    @Test
+    void testCreateContactReturnsContact()
+    {
+        ContactService contactService = new ContactService(apiKey, apiToken);
+        Contact contact = new Contact();
 
+        // set up test contact
+        String listName = Helper.generateRandomString(10);
 
+        EmailAddress address = new EmailAddress();
+        address.setEmailAddress(listName + "@gmail.com");
+        // add the email address to the array
+        contact.setEmailAddresses(new EmailAddress[]{ address });
 
+        // TODO: figure out how to set a list for a contact
+        // 1111111111
+        ContactListMetaData contactListMetaData = new ContactListMetaData();
+        contactListMetaData.setId("1111111111");
+        // add the contact list to the array
+        contact.setContactLists(new ContactListMetaData[]{ contactListMetaData });
+        System.out.println(address.getEmailAddress());
 
+        // send it
+        Response<Contact> response = contactService.createContactByOwner(contact);
+        assertEquals(201, response.code());
+        assertEquals("Created", response.message());
+        assertNotNull(response.body());
 
+        // Contact is created and embedded in response.body
+        assertTrue(response.body() instanceof Contact);
+        String id = response.body().getId();
+        assertEquals(response.body().getEmailAddresses()[0].getEmailAddress(), address.getEmailAddress());
+
+    }
 
 
 

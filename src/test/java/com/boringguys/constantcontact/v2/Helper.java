@@ -170,6 +170,29 @@ public class Helper
         System.out.println(sb.toString());
     }
 
+    /**
+     * Print out the contact lists
+     *
+     * @param list
+     */
+    public static void printContactList(ContactList list)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("List name:    " + list.getName());
+        sb.append(System.getProperty("line.separator"));
+        sb.append("List size:    " + list.getContactCount());
+        sb.append(System.getProperty("line.separator"));
+        sb.append("List id:      " + list.getId());
+        sb.append(System.getProperty("line.separator"));
+        sb.append("List created: " + list.getCreatedDate());
+        sb.append(System.getProperty("line.separator"));
+        sb.append("List status:  " + list.getStatus());
+        sb.append(System.getProperty("line.separator"));
+        sb.append("--------------------------------");
+        sb.append(System.getProperty("line.separator"));
+        System.out.println(sb.toString());
+
+    }
 
     /**
      * Print out the contact
