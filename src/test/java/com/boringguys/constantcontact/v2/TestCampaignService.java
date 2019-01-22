@@ -105,7 +105,7 @@ public class TestCampaignService
             assertTrue(campaigns.size() > 0);
             assertNotNull(campaigns.get(0));
             assertTrue(campaigns.get(0).getName().length() >= 4);
-            assertTrue(campaigns.get(0).getStatus().equals(CampaignStatus.SENT));
+
             if(showDebug)
             {
                 Helper.printCampaign(campaigns.get(0));

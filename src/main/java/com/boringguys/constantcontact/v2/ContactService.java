@@ -6,6 +6,7 @@ import com.constantcontact.v2.QueryDate;
 import com.constantcontact.v2.contacts.Contact;
 import com.constantcontact.v2.contacts.ContactList;
 import com.constantcontact.v2.contacts.ContactListStatus;
+import com.constantcontact.v2.contacts.OptInSource;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -37,19 +38,37 @@ public class ContactService
 
     // Call<Paged<Contact>> getContacts(@Query("limit") int limit, @Query("status") ContactStatus status);
     // Call<Paged<Contact>> getContacts(@Query("limit") int limit, @Query("modified_since") QueryDate date, @Query("status") ContactStatus status);
-    // //   Call<Paged<Contact>> getContacts(@Path("listId") String listId, @Query("limit") int limit, @Query("modified_since") QueryDate date);
     // Call<Contact> getContact(@Path("contactId") String contactId);
     //
     // Call<Contact> createContact(@Body Contact contact, @Query("action_by") OptInSource optInSource);
     // Call<Contact> updateContact(@Body Contact contact, @Path("contactId") String contactId, @Query("action_by") OptInSource optInSource);
     // Call<Response<Void>> unsubscribeContact(@Path("contactId") String contactId);
     //
-    // Call<ContactList> createContactList(@Body ContactList contactList);
-    // Call<ContactList> getContactList(@Path("listId") String listId);
     // Call<ContactList> updateContactList(@Body ContactList contactList, @Path("listId") String listId);
-    // Call<Response<Void>> deleteContactList(@Path("listId") String listId);
     //
     // Call<SignupFormResponse> createCustomSignupForm(@Body SignupFormRequest signupFormRequest);
+
+    public Contact createContact(Contact contact, OptInSource source)
+    {
+
+    }
+
+    public ContactList getContactList(String listId)
+    {
+        ContactList list = new ContactList();
+
+        try
+        {
+            com.constantcontact.v2.ContactService contactService = conn.getContactService();
+            list = contactService.getContactList(listId).execute().body();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        // give back empty list if none found
+        return list;
+    }
 
     /**
      * Get all the contact lists
