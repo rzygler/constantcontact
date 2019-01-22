@@ -1,5 +1,5 @@
 # Constant Contact
-Java wrapper for Constant Contact API v2. Sparse, but working.
+Java wrapper for Constant Contact API v2.
 
 ## Build instructions
 * The API v2 from Constant Contact uses Gradle for build so you will need to use that as well to build this code
@@ -21,6 +21,11 @@ AccountSummaryInformation summary = accountService.getAccountSummary();
 ```java
 ContactService contactService = new ContactService(apiKey, apiToken);
 List<ContactList> lists = contactService.getContactLists();
+```
+**Fetch contact list by name**
+```java
+ContactService contactService = new ContactService(apiKey, apiToken);
+ContactList list = service.getContactListByName(name);
 ```
 
 **Fetch all the contacts for list with id of 1**
