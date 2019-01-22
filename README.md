@@ -28,6 +28,21 @@ List<ContactList> lists = contactService.getContactLists();
 ContactService contactService = new ContactService(apiKey, apiToken);
 List<Contact> contacts = contactService.getContactsByList("1", this.fetchLimit, this.dateCreated);
 ```
+
+**Create a contact list**
+```java
+ContactService service = new ContactService(apiKey, apiToken);
+String listName = "Hello World List";
+ContactListStatus status = ContactListStatus.ACTIVE;
+Response<ContactList> response = service.createContactList(listName, status)
+
+// Contact list is created and embedded in response.body
+// OR errors will be in response.code, response,message
+ContactList list = response.body();
+String newName = list.getName();  // should be equal to listName
+String id = list.getId();  
+```
+
 **Fetch a contact**
 ```java
 ContactService contactService = new ContactService(apiKey, apiToken);
