@@ -81,39 +81,51 @@ public class ContactService
         return lists;
     }
 
-//     @POST("v2/lists")
-//    Call<ContactList> createContactList(@Body ContactList contactList);
-    public ContactList createContactList()
-    {
-        // TODO: test createContactList
 
-        ContactList list = new ContactList();
-        ContactList newList = null;
-        // list.setName("aaaa");
-        list.setStatus(ContactListStatus.ACTIVE);
+    /**
+     * Delete a contact list
+     *
+     * @param listId
+     * @return
+     */
+    public Response deleteContactList(String listId)
+    {
+        Response response = null;
 
         try
         {
             com.constantcontact.v2.ContactService contactService = conn.getContactService();
-            // System.out.println(contactService.createContactList(list).execute().body());
+
+            Call<Response<Void>> call = contactService.deleteContactList(listId);
+            response = call.execute();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+
+    /**
+     * Create a new contact list
+     *
+     * @param listName
+     * @param status        we default all of our lists to public
+     * @return
+     */
+    public Response<ContactList> createContactList(String listName, ContactListStatus status)
+    {
+        Response<ContactList> response = null;
+        ContactList list = new ContactList();
+        ContactList newList = null;
+        list.setName(listName);
+        list.setStatus(status);
+
+        try
+        {
+            com.constantcontact.v2.ContactService contactService = conn.getContactService();
             Call<ContactList> call = contactService.createContactList(list);
-            Response<ContactList> response = call.execute();
-            System.out.println("message: " + response.message());
-            System.out.println("code: " + response.code());
-            System.out.println(response);
-
-            // Good
-            // message: Created
-            // code: 201
-
-            // duplicate
-            // message: Conflict
-            // code: 409
-
-            // list.status not set so error
-            // message: Bad Request
-            // code: 400
-
+            response = call.execute();
 
         } catch (IOException e)
         {
@@ -123,7 +135,7 @@ public class ContactService
         {
             e.printStackTrace();
         }
-        return newList;
+        return response;
     }
 
 

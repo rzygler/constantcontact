@@ -10,10 +10,7 @@ import com.constantcontact.v2.tracking.TrackingSummary;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public class Helper
 {
@@ -68,6 +65,33 @@ public class Helper
         return configs;
     }
 
+
+    /**
+     * Generate a Random String
+     *
+     * @param len       how long should the string be
+     * @return
+     */
+    public static String generateRandomString(int len)
+    {
+        int leftLimit = 97; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        int targetStringLength = len;
+        Random random = new Random();
+        StringBuilder buffer = new StringBuilder(targetStringLength);
+        for (int i = 0; i < targetStringLength; i++) {
+            int randomLimitedInt = leftLimit + (int)(random.nextFloat() * (rightLimit - leftLimit + 1));
+            buffer.append((char) randomLimitedInt);
+        }
+        String str = buffer.toString();
+        return str;
+    }
+
+
+    /**
+     * Print out the Account Summary Information
+     * @param summary
+     */
     public static void printAccountSummaryInformation(AccountSummaryInformation summary)
     {
         if (summary == null)
@@ -107,6 +131,11 @@ public class Helper
         System.out.println(sb.toString());
     }
 
+    /**
+     * Print out the contact lists
+     *
+     * @param lists
+     */
     public static void printContactLists(List<ContactList> lists)
     {
         if (lists == null || lists.size() == 0)
@@ -141,6 +170,12 @@ public class Helper
         System.out.println(sb.toString());
     }
 
+
+    /**
+     * Print out the contact
+     *
+     * @param contact
+     */
     public static void printContact(Contact contact)
     {
         StringBuilder sb = new StringBuilder();
@@ -151,6 +186,11 @@ public class Helper
         System.out.println(sb.toString());
     }
 
+    /**
+     * Print out the campaign
+     *
+     * @param campaign
+     */
     public static void printCampaign(Campaign campaign)
     {
         StringBuilder sb = new StringBuilder();
@@ -163,6 +203,11 @@ public class Helper
         System.out.println(sb.toString());
     }
 
+    /**
+     * Print out the campaign tracking summary
+     *
+     * @param summary
+     */
     public static void printCampaignTrackingSummary(TrackingSummary summary)
     {
         StringBuilder sb = new StringBuilder();
