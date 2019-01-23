@@ -196,4 +196,14 @@ public class TestContactListService
         assertEquals(204, deleteResponse.code());
     }
 
+    @Test
+    void testGetContactListByNameFailsOnBadName()
+    {
+        String name = Helper.generateRandomString(10);
+        ContactService service = new ContactService(apiKey, apiToken);
+
+        // now go find that list by name
+        ContactList list = service.getContactListByName(name);
+        assertNull(list);
+    }
 }

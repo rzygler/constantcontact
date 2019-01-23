@@ -1,9 +1,6 @@
 package com.boringguys.constantcontact.v2;
 
-import com.constantcontact.v2.contacts.Contact;
-import com.constantcontact.v2.contacts.ContactList;
-import com.constantcontact.v2.contacts.ContactListMetaData;
-import com.constantcontact.v2.contacts.EmailAddress;
+import com.constantcontact.v2.contacts.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -75,44 +72,173 @@ public class TestContactService
         }
     }
 
-    // TODO: test creating a contact
+
 
     @Test
-    void testCreateContactReturnsContact()
+    void testCreateContactMissingContactListFails() throws InterruptedException
     {
-        ContactService contactService = new ContactService(apiKey, apiToken);
         Contact contact = new Contact();
 
         // set up test contact
-        String listName = Helper.generateRandomString(10);
+        String emailName = Helper.generateRandomString(10);
 
         EmailAddress address = new EmailAddress();
-        address.setEmailAddress(listName + "@gmail.com");
+        address.setEmailAddress(emailName + "@gmail.com");
         // add the email address to the array
         contact.setEmailAddresses(new EmailAddress[]{ address });
 
-        // TODO: figure out how to set a list for a contact
-        // 1111111111
+
+        // create the contact
+        ContactService service = new ContactService(apiKey, apiToken);
+        Response<Contact> response = service.createContactByOwner(contact);
+        assertEquals(400, response.code());
+        assertEquals("Bad Request", response.message());
+        assertNull(response.body());
+    }
+
+    @Test
+    void testCreateContactMissingEmailFails() throws InterruptedException
+    {
+        // First create a list
+        ContactService service = new ContactService(apiKey, apiToken);
+        String name = Helper.generateRandomString(10);
+        ContactListStatus status = ContactListStatus.ACTIVE;
+        Response<ContactList> response = service.createContactList(name, status);
+        String listId = response.body().getId();
+
+        // wait a bit
+        Thread.sleep(4000);
+
+        Contact contact = new Contact();
         ContactListMetaData contactListMetaData = new ContactListMetaData();
-        contactListMetaData.setId("1111111111");
+        contactListMetaData.setId(listId);
         // add the contact list to the array
         contact.setContactLists(new ContactListMetaData[]{ contactListMetaData });
-        System.out.println(address.getEmailAddress());
 
-        // send it
-        Response<Contact> response = contactService.createContactByOwner(contact);
-        assertEquals(201, response.code());
-        assertEquals("Created", response.message());
+        // create the contact
+        Response<Contact> response2 = service.createContactByOwner(contact);
+        assertEquals(400, response2.code());
+        assertEquals("Bad Request", response2.message());
+        assertNull(response2.body());
+
+        // wait a bit
+        Thread.sleep(4000);
+
+        // delete the list
+        ContactService service2 = new ContactService(apiKey, apiToken);
+        Response deleteResponse = service2.deleteContactList(listId);
+        assertEquals(204, deleteResponse.code());
+    }
+
+    @Test
+    void testCreateContactReturnsContact() throws InterruptedException
+    {
+        // First create a list
+        ContactService service = new ContactService(apiKey, apiToken);
+        String name = Helper.generateRandomString(10);
+        ContactListStatus status = ContactListStatus.ACTIVE;
+        Response<ContactList> response = service.createContactList(name, status);
+        String listId = response.body().getId();
+
+        // wait a bit
+        Thread.sleep(4000);
+
+        Contact contact = new Contact();
+
+        // set up test contact
+        String emailName = Helper.generateRandomString(10);
+
+        EmailAddress address = new EmailAddress();
+        address.setEmailAddress(emailName + "@gmail.com");
+        // add the email address to the array
+        contact.setEmailAddresses(new EmailAddress[]{ address });
+
+        ContactListMetaData contactListMetaData = new ContactListMetaData();
+        contactListMetaData.setId(listId);
+        // add the contact list to the array
+        contact.setContactLists(new ContactListMetaData[]{ contactListMetaData });
+        // System.out.println(address.getEmailAddress());
+
+        // create the contact
+        Response<Contact> response2 = service.createContactByOwner(contact);
+        assertEquals(201, response2.code());
+        assertEquals("Created", response2.message());
         assertNotNull(response.body());
 
         // Contact is created and embedded in response.body
-        assertTrue(response.body() instanceof Contact);
-        String id = response.body().getId();
-        assertEquals(response.body().getEmailAddresses()[0].getEmailAddress(), address.getEmailAddress());
+        assertTrue(response2.body() instanceof Contact);
+        String contactId = response2.body().getId();
+        assertEquals(response2.body().getEmailAddresses()[0].getEmailAddress(), address.getEmailAddress());
+
+        // wait a bit
+        Thread.sleep(4000);
+
+        // cannot actually delete the contact via api
+
+        // delete the list
+        ContactService service2 = new ContactService(apiKey, apiToken);
+        Response deleteResponse = service2.deleteContactList(listId);
+        assertEquals(204, deleteResponse.code());
 
     }
 
 
+
+    @Test
+    void testCreateDuplicateContactFails() throws InterruptedException
+    {
+        // First create a list
+        ContactService service = new ContactService(apiKey, apiToken);
+        String name = Helper.generateRandomString(10);
+        ContactListStatus status = ContactListStatus.ACTIVE;
+        Response<ContactList> response = service.createContactList(name, status);
+        String listId = response.body().getId();
+
+        // wait a bit
+        Thread.sleep(4000);
+
+        Contact contact = new Contact();
+
+        // set up test contact
+        String emailName = Helper.generateRandomString(10);
+
+        EmailAddress address = new EmailAddress();
+        address.setEmailAddress(emailName + "@gmail.com");
+        // add the email address to the array
+        contact.setEmailAddresses(new EmailAddress[]{ address });
+
+        ContactListMetaData contactListMetaData = new ContactListMetaData();
+        contactListMetaData.setId(listId);
+        // add the contact list to the array
+        contact.setContactLists(new ContactListMetaData[]{ contactListMetaData });
+
+        // create the contact
+        Response<Contact> response2 = service.createContactByOwner(contact);
+        assertEquals(201, response2.code());
+        assertEquals("Created", response2.message());
+        assertNotNull(response.body());
+
+        // wait a bit
+        Thread.sleep(4000);
+
+        // try to add the contact again
+        Response<Contact> response3 = service.createContactByOwner(contact);
+
+        assertEquals(409, response3.code());
+        assertEquals("Conflict", response3.message());
+        assertNull(response3.body());
+
+        // wait a bit
+        Thread.sleep(4000);
+
+        // cannot actually delete the contact via api
+
+        // delete the list
+        ContactService service2 = new ContactService(apiKey, apiToken);
+        Response deleteResponse = service2.deleteContactList(listId);
+        assertEquals(204, deleteResponse.code());
+
+    }
 
 
 

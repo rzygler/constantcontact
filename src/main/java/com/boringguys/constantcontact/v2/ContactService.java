@@ -177,7 +177,7 @@ public class ContactService
             com.constantcontact.v2.ContactService contactService = conn.getContactService();
             Call<Contact> call = contactService.createContact(contact, source);
             response = call.execute();
-            System.out.println(response);
+            // System.out.println(response);
         } catch (Exception e)
         {
             e.printStackTrace();
@@ -218,6 +218,8 @@ public class ContactService
         return response;
     }
 
+
+    //TODO: get contacts by list name instead of id
 
     /**
      * Get the email contacts for the list
