@@ -53,8 +53,26 @@ List<Contact> contacts = contactService.getContactsByEmail("homer.simpson@gmail.
 contacts.forEach(a -> System.out.println(contact.getEmailAddresses()[0].getEmailAddress() + "," +
                 contact.getFirstName() + ","
                 + contact.getLastName() ) );
-                
-                
+  
+  
+// Create a contact
+Contact contact = new Contact();
+EmailAddress address = new EmailAddress();
+address.setEmailAddress("homer.simpson@gmail.com");
+// add the email address to the array
+contact.setEmailAddresses(new EmailAddress[]{ address });
+// add the contact to one or more lists
+ContactListMetaData contactListMetaData = new ContactListMetaData();
+contactListMetaData.setId(listId); // get listId from an existing Contact list
+// add the contact list to the array
+contact.setContactLists(new ContactListMetaData[]{ contactListMetaData });
+// save the contact
+Response<Contact> response = service.createContactByOwner(contact)
+// Contact is saved and embedded in response.body
+Contact savedContact = response.body();
+String contactId = savedContact.getId();
+/////////////////////
+
 // Fetch all draft campaigns
 CampaignService campaignService = new CampaignService(apiKey, apiToken);
 List<Campaign> campaigns = campaignService.getDraftCampaigns();
