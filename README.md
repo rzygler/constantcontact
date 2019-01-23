@@ -21,63 +21,59 @@ AccountSummaryInformation summary = accountService.getAccountSummary();
 // Fetch all your existing contact lists
 ContactService contactService = new ContactService(apiKey, apiToken);
 List<ContactList> lists = contactService.getContactLists();
-```
 
-**Fetch contact list by name**
-```java
+
+// Fetch contact list by name
 ContactService contactService = new ContactService(apiKey, apiToken);
 ContactList list = service.getContactListByName(name);
-```
 
-**Fetch all the contacts for list with id of 1**
-```java
+
+// Fetch all the contacts for list with id of 1
 ContactService contactService = new ContactService(apiKey, apiToken);
 List<Contact> contacts = contactService.getContactsByList("1", this.fetchLimit, this.dateCreated);
-```
 
-**Create a contact list**
-```java
+
+// Create a contact list
 ContactService service = new ContactService(apiKey, apiToken);
 String listName = "Hello World List";
 ContactListStatus status = ContactListStatus.ACTIVE;
 Response<ContactList> response = service.createContactList(listName, status)
 
-// Contact list is created and embedded in response.body
-// OR errors will be in response.code, response,message
+    // Contact list is created and embedded in response.body
+    // OR errors will be in response.code, response,message
+    
 ContactList list = response.body();
 String newName = list.getName();  // should be equal to listName
 String id = list.getId();  
-```
 
-**Fetch a contact**
-```java
+
+// Fetch a contact
 ContactService contactService = new ContactService(apiKey, apiToken);
 List<Contact> contacts = contactService.getContactsByEmail("homer.simpson@gmail.com");
 contacts.forEach(a -> System.out.println(contact.getEmailAddresses()[0].getEmailAddress() + "," +
                 contact.getFirstName() + ","
                 + contact.getLastName() ) );
-```
-**Fetch all draft campaigns**
-```java
+                
+                
+// Fetch all draft campaigns
 CampaignService campaignService = new CampaignService(apiKey, apiToken);
 List<Campaign> campaigns = campaignService.getDraftCampaigns();
 campaigns.forEach(a -> System.out.println(a.getName()));
-```
 
-**Fetch all sent campaigns**
-```java
+
+// Fetch all sent campaigns
 CampaignService campaignService = new CampaignService(apiKey, apiToken);
 List<Campaign> campaigns = campaignService.getSentCampaigns();
 campaigns.forEach(a -> System.out.println(a.getName()));
-```
-**Fetch sent campaigns since 1/1/2019**
-```java
+
+
+// Fetch sent campaigns since 1/1/2019
 CampaignService campaignService = new CampaignService(apiKey, apiToken);
 List<Campaign> campaigns = campaignService.getSentCampaigns("2019/01/01 00:00:01");
 campaigns.forEach(a -> System.out.println(a.getName()));
-```
-**Fetch a campaign**
-```java
+
+
+// Fetch a campaign
 CampaignService campaignService = new CampaignService(apiKey, apiToken);
 Campaign campaign = campaignService.getCampaign("campaign id");
 System.out.println(campaign.getId() + "," +
