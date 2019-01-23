@@ -11,17 +11,18 @@ Java wrapper for Constant Contact API v2.
 
 ## Some code examples
 
-**Fetch the info on your Constant Contact account**
+
 ```java
+// Fetch the info on your Constant Contact account
 AccountService accountService = new AccountService(apiKey, apiToken);
 AccountSummaryInformation summary = accountService.getAccountSummary();
-```
 
-**Fetch all your existing contact lists**
-```java
+
+// Fetch all your existing contact lists
 ContactService contactService = new ContactService(apiKey, apiToken);
 List<ContactList> lists = contactService.getContactLists();
 ```
+
 **Fetch contact list by name**
 ```java
 ContactService contactService = new ContactService(apiKey, apiToken);
