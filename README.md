@@ -25,7 +25,7 @@ List<ContactList> lists = contactService.getContactLists();
 
 // Fetch contact list by name
 ContactService contactService = new ContactService(apiKey, apiToken);
-ContactList list = service.getContactListByName(name);
+ContactList list = contactService.getContactListByName(name);
 
 
 // Fetch all the contacts for list with id of 1
@@ -67,6 +67,7 @@ contactListMetaData.setId(listId); // get listId from an existing Contact list
 // add the contact list to the array
 contact.setContactLists(new ContactListMetaData[]{ contactListMetaData });
 // save the contact
+ContactService service = new ContactService(apiKey, apiToken);
 Response<Contact> response = service.createContactByOwner(contact)
 // Contact is saved and embedded in response.body
 Contact savedContact = response.body();
