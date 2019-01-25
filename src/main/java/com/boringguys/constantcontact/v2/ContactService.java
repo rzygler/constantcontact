@@ -36,6 +36,7 @@ public class ContactService
         this.conn = service.getApiConn();
     }
 
+    // TODO: batch import of contacts
 
     // Call<Paged<Contact>> getContacts(@Query("limit") int limit, @Query("status") ContactStatus status);
     // Call<Paged<Contact>> getContacts(@Query("limit") int limit, @Query("modified_since") QueryDate date, @Query("status") ContactStatus status);
@@ -219,14 +220,33 @@ public class ContactService
     }
 
 
-    //TODO: get contacts by list name instead of id
+    /**
+     * Get the contacts from a list by the list name
+     * @param listName
+     * @param limit         how many to return in a page
+     * @param dateCreated   date the list was modified
+     * @return              a list of email contacts
+     */
+    public List<Contact> getContactsByListName(String listName, int limit, String dateCreated)
+    {
+        List<Contact> contacts = new ArrayList<>();
+
+        ContactList list = this.getContactListByName(listName);
+        if (list == null)
+        {
+            return contacts;
+        }
+
+        return this.getContactsByList(list.getId(), limit, dateCreated);
+
+    }
 
     /**
      * Get the email contacts for the list
      *
      * @param listId        String id of the list
-     * @param limit         how many to return
-     * @param dateCreated   date the list was created
+     * @param limit         how many to return in a page
+     * @param dateCreated   date the list was modified
      * @return              a list of email contacts
      */
     public List<Contact> getContactsByList(String listId, int limit, String dateCreated)

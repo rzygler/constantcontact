@@ -1,11 +1,7 @@
 package com.boringguys.constantcontact.v2;
 
 import com.constantcontact.v2.contacts.*;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import retrofit2.Response;
 
 import java.util.List;
@@ -32,7 +28,37 @@ public class TestContactService
         this.showDebug = Boolean.parseBoolean(configs.get("showDebug"));
     }
 
+    @Test
+    void testGetContactsByListNameSucceeds()
+    {
+        ContactService contactService = new ContactService(apiKey, apiToken);
+        List<ContactList> lists = contactService.getContactLists();
+        ContactList list = lists.get(0);
+        List<Contact> contacts = contactService.getContactsByListName(list.getName(), this.fetchLimit, this.dateCreated);
 
+        assertTrue(contacts.size() > 0);
+        Contact contact = contacts.get(0);
+        assertNotNull(contact.getEmailAddresses()[0].getEmailAddress());
+        assertTrue(contact.getEmailAddresses()[0].getEmailAddress().length() >= 2);
+        assertTrue(contact.getFirstName().length() >= 2);
+        assertTrue(contact.getLastName().length() >= 2);
+
+        if (showDebug)
+        {
+            contacts.forEach(a -> Helper.printContact(a));
+        }
+    }
+
+    @Test
+    void testGetContactsByListNameFails()
+    {
+        ContactService contactService = new ContactService(apiKey, apiToken);
+        String str = Helper.generateRandomString(10);
+        List<Contact> contacts = contactService.getContactsByListName(str, this.fetchLimit, this.dateCreated);
+        assertTrue(contacts.size() == 0);
+
+
+    }
 
     @Test
     void testGetContactsByList()

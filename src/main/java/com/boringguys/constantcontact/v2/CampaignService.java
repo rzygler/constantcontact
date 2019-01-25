@@ -57,7 +57,6 @@ public class CampaignService
             e.printStackTrace();
         }
 
-        // TODO returning nulls from api is ugly
         return campaign;
     }
 
