@@ -30,27 +30,27 @@ ContactList list = service.getContactListByName(String name)
 
 ```java
 // Fetch the info on your Constant Contact account
-AccountService serviceAccount = new AccountService(apiKey, apiToken);
-AccountSummaryInformation summary = serviceAccount.getAccountSummary();
+ServiceAccount service = new ServiceAccount(apiKey, apiToken);
+AccountSummaryInformation summary = service.getAccountSummary();
 //////
 
 // Fetch all your existing contact lists
-ContactService serviceContact = new ContactService(apiKey, apiToken);
-List<ContactList> lists = serviceContact.getContactLists();
+ServiceContact service = new ServiceContact(apiKey, apiToken);
+List<ContactList> lists = service.getContactLists();
 //////
 
 // Fetch contact list by name
-ContactService serviceContact = new ContactService(apiKey, apiToken);
-ContactList list = serviceContact.getContactListByName(name);
+ServiceContact service = new ServiceContact(apiKey, apiToken);
+ContactList list = service.getContactListByName(name);
 //////
 
 // Fetch all the contacts for list with id of 1
-ContactService serviceContact = new ContactService(apiKey, apiToken);
-List<Contact> contacts = serviceContact.getContactsByList("1", this.fetchLimit, this.dateCreated);
+ServiceContact service = new ServiceContact(apiKey, apiToken);
+List<Contact> contacts = service.getContactsByList("1", this.fetchLimit, this.dateCreated);
 //////
 
 // Create a contact list
-ContactService service = new ContactService(apiKey, apiToken);
+ServiceContact service = new ServiceContact(apiKey, apiToken);
 String listName = "Hello World List";
 ContactListStatus status = ContactListStatus.ACTIVE;
 Response<ContactList> response = service.createContactList(listName, status)
@@ -62,8 +62,8 @@ String id = list.getId();
 //////
 
 // Fetch a contact
-ContactService serviceContact = new ContactService(apiKey, apiToken);
-List<Contact> contacts = serviceContact.getContactsByEmail("homer.simpson@gmail.com");
+ServiceContact service = new ServiceContact(apiKey, apiToken);
+List<Contact> contacts = service.getContactsByEmail("homer.simpson@gmail.com");
 contacts.forEach(a -> System.out.println(contact.getEmailAddresses()[0].getEmailAddress() + "," +
                 contact.getFirstName() + ","
                 + contact.getLastName() ) );
@@ -81,7 +81,7 @@ contactListMetaData.setId(listId); // get listId from an existing Contact list
 // add the contact list to the array
 contact.setContactLists(new ContactListMetaData[]{ contactListMetaData });
 // save the contact
-ContactService service = new ContactService(apiKey, apiToken);
+ServiceContact service = new ServiceContact(apiKey, apiToken);
 Response<Contact> response = service.createContactByOwner(contact)
 // Contact is saved and embedded in response.body
 Contact savedContact = response.body();
@@ -89,26 +89,26 @@ String contactId = savedContact.getId();
 //////
 
 // Fetch all draft campaigns
-CampaignService serviceCampaign = new CampaignService(apiKey, apiToken);
-List<Campaign> campaigns = serviceCampaign.getDraftCampaigns();
+ServiceCampaign service = new ServiceCampaign(apiKey, apiToken);
+List<Campaign> campaigns = service.getDraftCampaigns();
 campaigns.forEach(a -> System.out.println(a.getName()));
 //////
 
 // Fetch all sent campaigns
-CampaignService serviceCampaign = new CampaignService(apiKey, apiToken);
-List<Campaign> campaigns = serviceCampaign.getSentCampaigns();
+ServiceCampaign service = new ServiceCampaign(apiKey, apiToken);
+List<Campaign> campaigns = service.getSentCampaigns();
 campaigns.forEach(a -> System.out.println(a.getName()));
 //////
 
 // Fetch sent campaigns since 1/1/2019
-CampaignService serviceCampaign = new CampaignService(apiKey, apiToken);
-List<Campaign> campaigns = serviceCampaign.getSentCampaigns("2019/01/01 00:00:01");
+ServiceCampaign service = new ServiceCampaign(apiKey, apiToken);
+List<Campaign> campaigns = service.getSentCampaigns("2019/01/01 00:00:01");
 campaigns.forEach(a -> System.out.println(a.getName()));
 //////
 
 // Fetch a campaign
-CampaignService serviceCampaign = new CampaignService(apiKey, apiToken);
-Campaign campaign = serviceCampaign.getCampaign("campaign id");
+ServiceCampaign service = new ServiceCampaign(apiKey, apiToken);
+Campaign campaign = service.getCampaign("campaign id");
 System.out.println(campaign.getId() + "," +
                 campaign.getName() + "," +
                 campaign.getSubject() + "," +
