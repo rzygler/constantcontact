@@ -9,8 +9,10 @@ import com.constantcontact.v2.bulkactivities.AddContacts;
 import com.constantcontact.v2.bulkactivities.ImportData;
 import com.constantcontact.v2.contacts.Contact;
 import com.constantcontact.v2.contacts.EmailAddress;
+import retrofit2.Call;
 import retrofit2.Response;
 
+import java.io.IOException;
 import java.util.List;
 
 public class ServiceBulkActivities
@@ -31,36 +33,21 @@ public class ServiceBulkActivities
     }
 
 
-    /*
-
-        /**
-     * {@link AddContacts} to the account
-     *
-     * @param contacts the set of contacts to import and the contact lists to add them to
-     * @return the result of adding the contacts
-
-    POST("v2/activities/addcontacts")
-    Call<Activity> addContacts(@Body AddContacts contacts);
-     */
-
-/*
     /**
-     * Get the {@link Activity}
+     * Adds contacts via the bulk activity service
+     * The import data object is more loosely typed
+     * however, we shouldn't really allow anyone to go willy-nilly adding
+     * these untyped pieces of data to it, otherwise that will incur errors
      *
-     * @param activityId ID of bulk activity
-     * @return a Call that returns Activity
-
-GET("v2/activities/{activityId}")
-Call<Activity> getActivityStatus(@Path("activityId") String activityId);
-*/
-
-
-    // the import data object is more loosely typed
-    // however, we shouldn't really allow anyone to go willy-nilly adding
-    // these untyped pieces of data to it, otherwise that will incur errors
-
+     * @param contacts
+     * @param contactLists
+     * @param columns
+     * @throws TooManyContactsException
+     * @throws PayloadTooLargeException
+     * @throws IOException
+     */
     public void addContacts(List<Contact> contacts, String[] contactLists, String[] columns)
-            throws Exception
+            throws TooManyContactsException,PayloadTooLargeException,IOException
     {
         int numOfBytes = 0;
 
@@ -113,26 +100,23 @@ Call<Activity> getActivityStatus(@Path("activityId") String activityId);
             throw new PayloadTooLargeException("Contacts import cannot exceed 4mb of data");
         }
 
-
-
         contactsToAdd.setImportData(importData);
 
         Response<Activity> response = null;
 
-/*
         try
         {
             Call<Activity> activity = service.addContacts(contactsToAdd);
             response = activity.execute();
             Activity act2 = response.body();
 
-            System.out.println(response);
+            System.out.println(act2);
 
         } catch (IOException e)
         {
-            e.printStackTrace();
+            throw new IOException(e.getMessage());
         }
-*/
+
         // errorBody
 
 /*

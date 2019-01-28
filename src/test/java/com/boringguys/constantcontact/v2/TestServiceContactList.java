@@ -13,7 +13,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TestContactListService
+public class TestServiceContactList
 {
     private String apiKey;
     private String apiToken;

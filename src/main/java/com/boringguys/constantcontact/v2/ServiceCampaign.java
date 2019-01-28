@@ -47,10 +47,10 @@ public class ServiceCampaign
 
         try
         {
-            CampaignService campaignService = conn.getCampaignService();
+            CampaignService service = conn.getCampaignService();
 
             // synchronous method
-            campaign = campaignService.getCampaign(campaignId, true).execute().body();
+            campaign = service.getCampaign(campaignId, true).execute().body();
 
             return campaign;
         } catch (IOException e)
@@ -208,10 +208,10 @@ public class ServiceCampaign
 
         try
         {
-            CampaignService campaignService = conn.getCampaignService();
+            CampaignService service = conn.getCampaignService();
 
             // synchronous method
-            Paged<Campaign> pagedCampaigns = campaignService.getCampaigns(limit, status).execute().body();
+            Paged<Campaign> pagedCampaigns = service.getCampaigns(limit, status).execute().body();
 
             if (pagedCampaigns == null)
             {
@@ -228,7 +228,7 @@ public class ServiceCampaign
             {
                 // System.out.println(pagedCampaigns.getNextLink());
                 Thread.sleep(millisToSleepBetweenRequests);
-                pagedCampaigns = campaignService.getCampaigns(pagedCampaigns.getNextLink()).execute().body();
+                pagedCampaigns = service.getCampaigns(pagedCampaigns.getNextLink()).execute().body();
                 campaigns.addAll(pagedCampaigns.getResults());
             }
 
@@ -291,10 +291,10 @@ public class ServiceCampaign
 
         try
         {
-            CampaignService campaignService = conn.getCampaignService();
+            CampaignService service = conn.getCampaignService();
 
             // synchronous method
-            Paged<Campaign> pagedCampaigns = campaignService.getCampaigns(limit, queryDate, status).execute().body();
+            Paged<Campaign> pagedCampaigns = service.getCampaigns(limit, queryDate, status).execute().body();
 
             if (pagedCampaigns == null)
             {
@@ -311,7 +311,7 @@ public class ServiceCampaign
             {
                 System.out.println(pagedCampaigns.getNextLink());
                 Thread.sleep(millisToSleepBetweenRequests);
-                pagedCampaigns = campaignService.getCampaigns(pagedCampaigns.getNextLink()).execute().body();
+                pagedCampaigns = service.getCampaigns(pagedCampaigns.getNextLink()).execute().body();
                 campaigns.addAll(pagedCampaigns.getResults());
             }
 
@@ -346,7 +346,7 @@ public class ServiceCampaign
     // Call<CampaignSchedule> getCampaignSchedule(@Path("campaignId") String campaignId, @Path("scheduleId") String scheduleId);
     // @PUT("v2/emailmarketing/campaigns/{campaignId}/schedules/{scheduleId}")
     // Call<CampaignSchedule> updateCampaignSchedule(@Path("campaignId") String campaignId, @Path("scheduleId") String scheduleId);
-    // @DELETE("v2/emailmarketing/campaigns/{campaignId}/schedules/{scheduleId}")
+    // @DELETE("service/emailmarketing/campaigns/{campaignId}/schedules/{scheduleId}")
     // Call<Response<Void>> deleteCampaignSchedule(@Path("campaignId") String campaignId, @Path("scheduleId") String scheduleId);
 
 }

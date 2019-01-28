@@ -59,8 +59,8 @@ public class ServiceContact
 
         try
         {
-            com.constantcontact.v2.ContactService contactService = conn.getContactService();
-            list = contactService.getContactList(listId).execute().body();
+            ContactService service = conn.getContactService();
+            list = service.getContactList(listId).execute().body();
         } catch (IOException e)
         {
             e.printStackTrace();
@@ -77,11 +77,11 @@ public class ServiceContact
 
         try
         {
-            com.constantcontact.v2.ContactService contactService = conn.getContactService();
+            ContactService service = conn.getContactService();
 
             // fetching the lists gets ALL your lists at once
             // no need to loop thru, oversight in their API design
-            lists = contactService.getContactLists(null).execute().body();
+            lists = service.getContactLists(null).execute().body();
 
             result = lists.stream()
                     .filter(item -> item.getName().equals(name))
@@ -112,11 +112,11 @@ public class ServiceContact
 
         try
         {
-            com.constantcontact.v2.ContactService contactService = conn.getContactService();
+            ContactService service = conn.getContactService();
 
             // fetching the lists gets ALL your lists at once
             // no need to loop thru, oversight in their API design
-            lists = contactService.getContactLists(null).execute().body();
+            lists = service.getContactLists(null).execute().body();
             if (lists != null && lists.size() != 0)
             {
                 return lists;
@@ -144,9 +144,9 @@ public class ServiceContact
 
         try
         {
-            com.constantcontact.v2.ContactService contactService = conn.getContactService();
+            ContactService service = conn.getContactService();
 
-            Call<Response<Void>> call = contactService.deleteContactList(listId);
+            Call<Response<Void>> call = service.deleteContactList(listId);
             response = call.execute();
         } catch (Exception e)
         {
@@ -176,8 +176,8 @@ public class ServiceContact
         Response<Contact> response = null;
         try
         {
-            com.constantcontact.v2.ContactService contactService = conn.getContactService();
-            Call<Contact> call = contactService.createContact(contact, source);
+            ContactService service = conn.getContactService();
+            Call<Contact> call = service.createContact(contact, source);
             response = call.execute();
             // System.out.println(response);
         } catch (Exception e)
@@ -205,8 +205,8 @@ public class ServiceContact
 
         try
         {
-            ContactService contactService = conn.getContactService();
-            Call<ContactList> call = contactService.createContactList(list);
+            ContactService service = conn.getContactService();
+            Call<ContactList> call = service.createContactList(list);
             response = call.execute();
 
         } catch (IOException e)
@@ -256,7 +256,7 @@ public class ServiceContact
 
         try
         {
-            ContactService contactService = conn.getContactService();
+            ContactService service = conn.getContactService();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyymmdd");
             Date dated =null;
             try
@@ -268,7 +268,7 @@ public class ServiceContact
             }
 
             // synchronous method
-            Paged<Contact> pagedContacts = contactService.getContacts(listId,limit, new QueryDate(dated)).execute().body();
+            Paged<Contact> pagedContacts = service.getContacts(listId,limit, new QueryDate(dated)).execute().body();
 
             if (pagedContacts.getResults().size() > 0)
             {
@@ -280,7 +280,7 @@ public class ServiceContact
             {
                 // System.out.println(pagedContacts.getNextLink());
                 Thread.sleep(millisToSleepBetweenRequests);
-                pagedContacts = contactService.getContacts(pagedContacts.getNextLink()).execute().body();
+                pagedContacts = service.getContacts(pagedContacts.getNextLink()).execute().body();
                 contacts.addAll(pagedContacts.getResults());
             }
 
@@ -308,8 +308,8 @@ public class ServiceContact
 
         try
         {
-            ContactService contactService = conn.getContactService();
-            Paged<Contact> pagedContacts = contactService.getContactsByEmail(email).execute().body();
+            ContactService service = conn.getContactService();
+            Paged<Contact> pagedContacts = service.getContactsByEmail(email).execute().body();
             if (pagedContacts.getResults().size() > 0)
             {
                 contacts.addAll(pagedContacts.getResults());
