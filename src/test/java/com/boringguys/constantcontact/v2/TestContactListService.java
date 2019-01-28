@@ -3,6 +3,7 @@ package com.boringguys.constantcontact.v2;
 import com.constantcontact.v2.contacts.ContactList;
 import com.constantcontact.v2.contacts.ContactListStatus;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import retrofit2.Response;
 
@@ -165,6 +166,22 @@ public class TestContactListService
         assertEquals(204, deleteResponse.code());
     }
 
+    //1645435044    zzz
+    // 1705803815   yyy
+
+    @Test
+    @Disabled
+    void testGetContactListByNameZZZ() throws InterruptedException
+    {
+        ContactService service = new ContactService(apiKey, apiToken);
+        ContactList list = service.getContactListByName("yyy");
+
+        if(showDebug)
+        {
+            Helper.printContactList(list);
+        }
+
+    }
 
     @Test
     void testGetContactListByName() throws InterruptedException
