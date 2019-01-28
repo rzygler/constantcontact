@@ -1,5 +1,5 @@
 # Constant Contact
-Java wrapper for Constant Contact API v2. CC api is pretty good, but I wrapped it here to add some convenience methods.  If you're making multiple requests to get pages of data from a list, it's easier to just wrap that in a method that does the work for you and returns the complete collection (ex., contactService.getContactsByList().
+This is a Java wrapper for Constant Contact API v2. The existing CC api (version 2) is pretty good, but I wrapped it here to add some convenience methods.  If you're making multiple requests to get pages of data from a list, it's easier to just wrap that in a method that does the work for you and returns the complete collection (ex., contactService.getContactsByList().
 
 I've also added some shortcut methods.  For instance, if you want to report on the "SENT" campaigns you can just do:
 
