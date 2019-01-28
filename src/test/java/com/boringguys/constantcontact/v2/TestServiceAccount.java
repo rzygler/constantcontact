@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Map;
 
-public class TestAccountService
+public class TestServiceAccount
 {
     private String apiKey;
     private String apiToken;
@@ -42,8 +42,8 @@ public class TestAccountService
     @Test
     void testAccountSummaryInformationIsFetched()
     {
-        AccountService accountService = new AccountService(apiKey, apiToken);
-        AccountSummaryInformation summaryInfo = accountService.getAccountSummary();
+        ServiceAccount serviceAccount = new ServiceAccount(apiKey, apiToken);
+        AccountSummaryInformation summaryInfo = serviceAccount.getAccountSummary();
         assertNotNull(summaryInfo != null);
         assertNotNull(summaryInfo.getFirstName());
         assertNotNull(summaryInfo.getLastName());
@@ -68,22 +68,22 @@ public class TestAccountService
     @Test
     void testUpdateAccountSummaryInformation()
     {
-        AccountService accountService = new AccountService(apiKey, apiToken);
-        assertThrows(NotImplementedException.class, () -> accountService.updateAccountSummaryInformation() );
+        ServiceAccount serviceAccount = new ServiceAccount(apiKey, apiToken);
+        assertThrows(NotImplementedException.class, () -> serviceAccount.updateAccountSummaryInformation() );
     }
 
     @Test
     void testCreateAccountEmailAddress()
     {
-        AccountService accountService = new AccountService(apiKey, apiToken);
-        assertThrows(NotImplementedException.class, () -> accountService.createAccountEmailAddress() );
+        ServiceAccount serviceAccount = new ServiceAccount(apiKey, apiToken);
+        assertThrows(NotImplementedException.class, () -> serviceAccount.createAccountEmailAddress() );
     }
 
     @Test
     void testGetAccountEmailAddresses()
     {
-        AccountService accountService = new AccountService(apiKey, apiToken);
-        assertThrows(NotImplementedException.class, () -> accountService.getAccountEmailAddresses() );
+        ServiceAccount serviceAccount = new ServiceAccount(apiKey, apiToken);
+        assertThrows(NotImplementedException.class, () -> serviceAccount.getAccountEmailAddresses() );
     }
 
 

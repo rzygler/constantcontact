@@ -9,8 +9,6 @@ import retrofit2.Response;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -40,12 +38,12 @@ public class TestContactListService
     void testGetContactList()
     {
         // first get all the lists, then pick one
-        ContactService contactService = new ContactService(apiKey, apiToken);
-        List<ContactList> lists = contactService.getContactLists();
+        ServiceContact serviceContact = new ServiceContact(apiKey, apiToken);
+        List<ContactList> lists = serviceContact.getContactLists();
         ContactList list = lists.get(0);
         String listId = list.getId();
 
-        ContactList list2 = contactService.getContactList(listId);
+        ContactList list2 = serviceContact.getContactList(listId);
         assertEquals(list2.getName(), list.getName());
         assertEquals(list2.getId(), list.getId());
     }
@@ -53,16 +51,16 @@ public class TestContactListService
     @Test
     void testGetBadContactListFails()
     {
-        ContactService contactService = new ContactService(apiKey, apiToken);
-        ContactList list = contactService.getContactList("aaaaaaaa");
+        ServiceContact serviceContact = new ServiceContact(apiKey, apiToken);
+        ContactList list = serviceContact.getContactList("aaaaaaaa");
         assertNull(list);
     }
 
     @Test
     void testGetContactLists()
     {
-        ContactService contactService = new ContactService(apiKey, apiToken);
-        List<ContactList> lists = contactService.getContactLists();
+        ServiceContact serviceContact = new ServiceContact(apiKey, apiToken);
+        List<ContactList> lists = serviceContact.getContactLists();
         assertNotNull(lists);
         assertTrue(lists.size() > 0);
 
@@ -83,10 +81,10 @@ public class TestContactListService
     @Test
     void testCreateContactListWithMissingNameIsBadRequest()
     {
-        ContactService contactServiceForCreate = new ContactService(apiKey, apiToken);
+        ServiceContact serviceContactForCreate = new ServiceContact(apiKey, apiToken);
         String listName = null;
         ContactListStatus status = ContactListStatus.ACTIVE;
-        Response<ContactList> response = contactServiceForCreate.createContactList(listName, status);
+        Response<ContactList> response = serviceContactForCreate.createContactList(listName, status);
         assertEquals(400, response.code());
         assertEquals("Bad Request", response.message());
         assertNull(response.body());
@@ -95,10 +93,10 @@ public class TestContactListService
     @Test
     void testCreateContactListWithMissingStatusIsBadRequest()
     {
-        ContactService contactServiceForCreate = new ContactService(apiKey, apiToken);
+        ServiceContact serviceContactForCreate = new ServiceContact(apiKey, apiToken);
         String listName = Helper.generateRandomString(10);
         ContactListStatus status = null;
-        Response<ContactList> response = contactServiceForCreate.createContactList(listName, status);
+        Response<ContactList> response = serviceContactForCreate.createContactList(listName, status);
         assertEquals(400, response.code());
         assertEquals("Bad Request", response.message());
         assertNull(response.body());
@@ -107,15 +105,15 @@ public class TestContactListService
     @Test
     void testCreateContactListWithDuplicateNameIsBadRequest() throws InterruptedException
     {
-        ContactService contactServiceForCreate = new ContactService(apiKey, apiToken);
+        ServiceContact serviceContactForCreate = new ServiceContact(apiKey, apiToken);
         String listName = Helper.generateRandomString(10);
         ContactListStatus status = ContactListStatus.ACTIVE;
-        Response<ContactList> response = contactServiceForCreate.createContactList(listName, status);
+        Response<ContactList> response = serviceContactForCreate.createContactList(listName, status);
         String id = response.body().getId();
         Thread.sleep(4000);
 
         // duplicate contact list
-        Response<ContactList> response2 = contactServiceForCreate.createContactList(listName, status);
+        Response<ContactList> response2 = serviceContactForCreate.createContactList(listName, status);
 
         assertEquals(409, response2.code());
         assertEquals("Conflict", response2.message());
@@ -123,14 +121,14 @@ public class TestContactListService
 
         // clean up
         Thread.sleep(4000);
-        ContactService service2 = new ContactService(apiKey, apiToken);
+        ServiceContact service2 = new ServiceContact(apiKey, apiToken);
         service2.deleteContactList(id);
     }
 
     @Test
     void testCreateContactListIsGoodRequest() throws InterruptedException
     {
-        ContactService service = new ContactService(apiKey, apiToken);
+        ServiceContact service = new ServiceContact(apiKey, apiToken);
         String listName = Helper.generateRandomString(10);
         ContactListStatus status = ContactListStatus.ACTIVE;
         Response<ContactList> response = service.createContactList(listName, status);
@@ -145,7 +143,7 @@ public class TestContactListService
 
         // clean up
         Thread.sleep(4000);
-        ContactService service2 = new ContactService(apiKey, apiToken);
+        ServiceContact service2 = new ServiceContact(apiKey, apiToken);
         service2.deleteContactList(id);
     }
 
@@ -153,7 +151,7 @@ public class TestContactListService
     @Test
     void testCreatedContactListIsDeleted() throws InterruptedException
     {
-        ContactService service = new ContactService(apiKey, apiToken);
+        ServiceContact service = new ServiceContact(apiKey, apiToken);
         String listName = Helper.generateRandomString(10);
         ContactListStatus status = ContactListStatus.ACTIVE;
         Response<ContactList> response = service.createContactList(listName, status);
@@ -161,7 +159,7 @@ public class TestContactListService
 
         // clean up
         Thread.sleep(4000);
-        ContactService service2 = new ContactService(apiKey, apiToken);
+        ServiceContact service2 = new ServiceContact(apiKey, apiToken);
         Response deleteResponse = service2.deleteContactList(id);
         assertEquals(204, deleteResponse.code());
     }
@@ -173,7 +171,7 @@ public class TestContactListService
     @Disabled
     void testGetContactListByNameZZZ() throws InterruptedException
     {
-        ContactService service = new ContactService(apiKey, apiToken);
+        ServiceContact service = new ServiceContact(apiKey, apiToken);
         ContactList list = service.getContactListByName("yyy");
 
         if(showDebug)
@@ -186,7 +184,7 @@ public class TestContactListService
     @Test
     void testGetContactListByName() throws InterruptedException
     {
-        ContactService service = new ContactService(apiKey, apiToken);
+        ServiceContact service = new ServiceContact(apiKey, apiToken);
         String name = Helper.generateRandomString(10);
         ContactListStatus status = ContactListStatus.ACTIVE;
         Response<ContactList> response = service.createContactList(name, status);
@@ -208,7 +206,7 @@ public class TestContactListService
 
         // clean up
         Thread.sleep(4000);
-        ContactService service2 = new ContactService(apiKey, apiToken);
+        ServiceContact service2 = new ServiceContact(apiKey, apiToken);
         Response deleteResponse = service2.deleteContactList(id);
         assertEquals(204, deleteResponse.code());
     }
@@ -217,7 +215,7 @@ public class TestContactListService
     void testGetContactListByNameFailsOnBadName()
     {
         String name = Helper.generateRandomString(10);
-        ContactService service = new ContactService(apiKey, apiToken);
+        ServiceContact service = new ServiceContact(apiKey, apiToken);
 
         // now go find that list by name
         ContactList list = service.getContactListByName(name);

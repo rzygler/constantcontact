@@ -10,7 +10,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class TestContactService
+public class TestServiceContact
 {
     private String apiKey;
     private String apiToken;
@@ -31,10 +31,10 @@ public class TestContactService
     @Test
     void testGetContactsByListNameSucceeds()
     {
-        ContactService contactService = new ContactService(apiKey, apiToken);
-        List<ContactList> lists = contactService.getContactLists();
+        ServiceContact serviceContact = new ServiceContact(apiKey, apiToken);
+        List<ContactList> lists = serviceContact.getContactLists();
         ContactList list = lists.get(0);
-        List<Contact> contacts = contactService.getContactsByListName(list.getName(), this.fetchLimit, this.dateCreated);
+        List<Contact> contacts = serviceContact.getContactsByListName(list.getName(), this.fetchLimit, this.dateCreated);
 
         assertTrue(contacts.size() > 0);
         Contact contact = contacts.get(0);
@@ -52,9 +52,9 @@ public class TestContactService
     @Test
     void testGetContactsByListNameFails()
     {
-        ContactService contactService = new ContactService(apiKey, apiToken);
+        ServiceContact serviceContact = new ServiceContact(apiKey, apiToken);
         String str = Helper.generateRandomString(10);
-        List<Contact> contacts = contactService.getContactsByListName(str, this.fetchLimit, this.dateCreated);
+        List<Contact> contacts = serviceContact.getContactsByListName(str, this.fetchLimit, this.dateCreated);
         assertTrue(contacts.size() == 0);
 
 
@@ -63,10 +63,10 @@ public class TestContactService
     @Test
     void testGetContactsByList()
     {
-        ContactService contactService = new ContactService(apiKey, apiToken);
-        List<ContactList> lists = contactService.getContactLists();
+        ServiceContact serviceContact = new ServiceContact(apiKey, apiToken);
+        List<ContactList> lists = serviceContact.getContactLists();
         ContactList list = lists.get(0);
-        List<Contact> contacts = contactService.getContactsByList(list.getId(), this.fetchLimit, this.dateCreated);
+        List<Contact> contacts = serviceContact.getContactsByList(list.getId(), this.fetchLimit, this.dateCreated);
 
         assertTrue(contacts.size() > 0);
         Contact contact = contacts.get(0);
@@ -85,8 +85,8 @@ public class TestContactService
     @Test
     void testGetContactsByEmail()
     {
-        ContactService contactService = new ContactService(apiKey, apiToken);
-        List<Contact> contacts = contactService.getContactsByEmail("homer@gmail.com");
+        ServiceContact serviceContact = new ServiceContact(apiKey, apiToken);
+        List<Contact> contacts = serviceContact.getContactsByEmail("homer@gmail.com");
 
         assertTrue(contacts.size() > 0);
         assertNotNull(contacts.get(0));
@@ -115,7 +115,7 @@ public class TestContactService
 
 
         // create the contact
-        ContactService service = new ContactService(apiKey, apiToken);
+        ServiceContact service = new ServiceContact(apiKey, apiToken);
         Response<Contact> response = service.createContactByOwner(contact);
         assertEquals(400, response.code());
         assertEquals("Bad Request", response.message());
@@ -126,7 +126,7 @@ public class TestContactService
     void testCreateContactMissingEmailFails() throws InterruptedException
     {
         // First create a list
-        ContactService service = new ContactService(apiKey, apiToken);
+        ServiceContact service = new ServiceContact(apiKey, apiToken);
         String name = Helper.generateRandomString(10);
         ContactListStatus status = ContactListStatus.ACTIVE;
         Response<ContactList> response = service.createContactList(name, status);
@@ -151,16 +151,17 @@ public class TestContactService
         Thread.sleep(4000);
 
         // delete the list
-        ContactService service2 = new ContactService(apiKey, apiToken);
+        ServiceContact service2 = new ServiceContact(apiKey, apiToken);
         Response deleteResponse = service2.deleteContactList(listId);
         assertEquals(204, deleteResponse.code());
     }
 
     @Test
+    @Disabled
     void testCreateContactReturnsContact() throws InterruptedException
     {
         // First create a list
-        ContactService service = new ContactService(apiKey, apiToken);
+        ServiceContact service = new ServiceContact(apiKey, apiToken);
         String name = Helper.generateRandomString(10);
         ContactListStatus status = ContactListStatus.ACTIVE;
         Response<ContactList> response = service.createContactList(name, status);
@@ -202,7 +203,7 @@ public class TestContactService
         // cannot actually delete the contact via api
 
         // delete the list
-        ContactService service2 = new ContactService(apiKey, apiToken);
+        ServiceContact service2 = new ServiceContact(apiKey, apiToken);
         Response deleteResponse = service2.deleteContactList(listId);
         assertEquals(204, deleteResponse.code());
 
@@ -211,10 +212,11 @@ public class TestContactService
 
 
     @Test
+    @Disabled
     void testCreateDuplicateContactFails() throws InterruptedException
     {
         // First create a list
-        ContactService service = new ContactService(apiKey, apiToken);
+        ServiceContact service = new ServiceContact(apiKey, apiToken);
         String name = Helper.generateRandomString(10);
         ContactListStatus status = ContactListStatus.ACTIVE;
         Response<ContactList> response = service.createContactList(name, status);
@@ -260,7 +262,7 @@ public class TestContactService
         // cannot actually delete the contact via api
 
         // delete the list
-        ContactService service2 = new ContactService(apiKey, apiToken);
+        ServiceContact service2 = new ServiceContact(apiKey, apiToken);
         Response deleteResponse = service2.deleteContactList(listId);
         assertEquals(204, deleteResponse.code());
 

@@ -1,11 +1,12 @@
 package com.boringguys.constantcontact.v2;
 
 import com.constantcontact.v2.CCApi2;
+import com.constantcontact.v2.CampaignTrackingService;
 import com.constantcontact.v2.tracking.TrackingSummary;
 
 import java.io.IOException;
 
-public class CampaignTrackingService
+public class ServiceCampaignTracking
 {
     private ApiV2 service;
     private CCApi2 conn;
@@ -16,7 +17,7 @@ public class CampaignTrackingService
      * @param apiKey    Constant Contact developer api key
      * @param apiToken  Constant Contact developer token
      */
-    public CampaignTrackingService(String apiKey, String apiToken)
+    public ServiceCampaignTracking(String apiKey, String apiToken)
     {
         this.service = new ApiV2(apiKey, apiToken);
         this.conn = service.getApiConn();
@@ -34,7 +35,7 @@ public class CampaignTrackingService
         TrackingSummary summary = null;
         try
         {
-            com.constantcontact.v2.CampaignTrackingService service = conn.getCampaignTrackingService();
+            CampaignTrackingService service = conn.getCampaignTrackingService();
 
             // synchronous method
             summary = service.getTrackingSummary(campaignId).execute().body();

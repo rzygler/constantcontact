@@ -1,6 +1,7 @@
 package com.boringguys.constantcontact.v2;
 
 import com.constantcontact.v2.CCApi2;
+import com.constantcontact.v2.CampaignService;
 import com.constantcontact.v2.Paged;
 import com.constantcontact.v2.QueryDate;
 import com.constantcontact.v2.campaigns.Campaign;
@@ -15,19 +16,19 @@ import java.util.Date;
 import java.util.List;
 
 
-public class CampaignService
+public class ServiceCampaign
 {
     private ApiV2 service;
     private CCApi2 conn;
     int millisToSleepBetweenRequests = 4000;
 
     /**
-     * Constructor for CampaignService
+     * Constructor for ServiceCampaign
      *
      * @param apiKey    Constant Contact developer api key
      * @param apiToken  Constant Contact developer token
      */
-    public CampaignService(String apiKey, String apiToken)
+    public ServiceCampaign(String apiKey, String apiToken)
     {
         this.service = new ApiV2(apiKey, apiToken);
         this.conn = service.getApiConn();
@@ -46,7 +47,7 @@ public class CampaignService
 
         try
         {
-            com.constantcontact.v2.CampaignService campaignService = conn.getCampaignService();
+            CampaignService campaignService = conn.getCampaignService();
 
             // synchronous method
             campaign = campaignService.getCampaign(campaignId, true).execute().body();
@@ -207,7 +208,7 @@ public class CampaignService
 
         try
         {
-            com.constantcontact.v2.CampaignService campaignService = conn.getCampaignService();
+            CampaignService campaignService = conn.getCampaignService();
 
             // synchronous method
             Paged<Campaign> pagedCampaigns = campaignService.getCampaigns(limit, status).execute().body();
@@ -290,7 +291,7 @@ public class CampaignService
 
         try
         {
-            com.constantcontact.v2.CampaignService campaignService = conn.getCampaignService();
+            CampaignService campaignService = conn.getCampaignService();
 
             // synchronous method
             Paged<Campaign> pagedCampaigns = campaignService.getCampaigns(limit, queryDate, status).execute().body();

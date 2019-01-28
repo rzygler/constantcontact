@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestCampaignService
+public class TestServiceCampaign
 {
     private String apiKey;
     private String apiToken;
@@ -36,8 +36,8 @@ public class TestCampaignService
     @Test
     void testGetDraftCampaigns()
     {
-        CampaignService campaignService = new CampaignService(apiKey, apiToken);
-        List<Campaign> campaigns = campaignService.getDraftCampaigns();
+        ServiceCampaign serviceCampaign = new ServiceCampaign(apiKey, apiToken);
+        List<Campaign> campaigns = serviceCampaign.getDraftCampaigns();
         assertTrue(campaigns.size() > 0);
         assertNotNull(campaigns.get(0));
         assertTrue(campaigns.get(0).getName().length() >= 4);
@@ -54,10 +54,10 @@ public class TestCampaignService
     void testGetSentCampaignsSince()
     {
         // public List<Campaign> getSentCampaigns(String sinceDate)
-        CampaignService campaignService = new CampaignService(apiKey, apiToken);
+        ServiceCampaign serviceCampaign = new ServiceCampaign(apiKey, apiToken);
         try
         {
-            List<Campaign> campaigns = campaignService.getSentCampaigns("2019/01/01");
+            List<Campaign> campaigns = serviceCampaign.getSentCampaigns("2019/01/01");
             assertTrue(campaigns.size() > 0);
             assertNotNull(campaigns.get(0));
             assertTrue(campaigns.get(0).getName().length() >= 4);
@@ -76,10 +76,10 @@ public class TestCampaignService
     void testGetDraftCampaignsSince()
     {
         // public List<Campaign> getSentCampaigns(String sinceDate)
-        CampaignService campaignService = new CampaignService(apiKey, apiToken);
+        ServiceCampaign serviceCampaign = new ServiceCampaign(apiKey, apiToken);
         try
         {
-            List<Campaign> campaigns = campaignService.getDraftCampaigns("2019/01/01");
+            List<Campaign> campaigns = serviceCampaign.getDraftCampaigns("2019/01/01");
             assertTrue(campaigns.size() > 0);
             assertNotNull(campaigns.get(0));
             assertTrue(campaigns.get(0).getName().length() >= 4);
@@ -98,10 +98,10 @@ public class TestCampaignService
     void testGetAllCampaignsSince()
     {
         // public List<Campaign> getSentCampaigns(String sinceDate)
-        CampaignService campaignService = new CampaignService(apiKey, apiToken);
+        ServiceCampaign serviceCampaign = new ServiceCampaign(apiKey, apiToken);
         try
         {
-            List<Campaign> campaigns = campaignService.getAllCampaigns("2019/01/01");
+            List<Campaign> campaigns = serviceCampaign.getAllCampaigns("2019/01/01");
             assertTrue(campaigns.size() > 0);
             assertNotNull(campaigns.get(0));
             assertTrue(campaigns.get(0).getName().length() >= 4);
@@ -121,13 +121,13 @@ public class TestCampaignService
     @Test
     void testGetOneCampaignSince()
     {
-        CampaignService campaignService = new CampaignService(apiKey, apiToken);
+        ServiceCampaign serviceCampaign = new ServiceCampaign(apiKey, apiToken);
         try
         {
-            List<Campaign> campaigns = campaignService.getSentCampaigns("2019/01/01");
+            List<Campaign> campaigns = serviceCampaign.getSentCampaigns("2019/01/01");
             Campaign campaign = campaigns.get(0);
 
-            Campaign campaignToCompare = campaignService.getCampaign(campaign.getId());
+            Campaign campaignToCompare = serviceCampaign.getCampaign(campaign.getId());
             assertNotNull(campaignToCompare);
             assertEquals(campaign.getName(), campaignToCompare.getName());
             assertNotNull(campaignToCompare.getCreatedDate());

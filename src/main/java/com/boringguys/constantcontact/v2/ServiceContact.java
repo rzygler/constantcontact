@@ -1,6 +1,7 @@
 package com.boringguys.constantcontact.v2;
 
 import com.constantcontact.v2.CCApi2;
+import com.constantcontact.v2.ContactService;
 import com.constantcontact.v2.Paged;
 import com.constantcontact.v2.QueryDate;
 import com.constantcontact.v2.contacts.Contact;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 
-public class ContactService
+public class ServiceContact
 {
     private ApiV2 service;
     private CCApi2 conn;
@@ -30,7 +31,7 @@ public class ContactService
      * @param apiKey    Constant Contact developer api key
      * @param apiToken  Constant Contact developer token
      */
-    public ContactService(String apiKey, String apiToken)
+    public ServiceContact(String apiKey, String apiToken)
     {
         this.service = new ApiV2(apiKey, apiToken);
         this.conn = service.getApiConn();
@@ -204,7 +205,7 @@ public class ContactService
 
         try
         {
-            com.constantcontact.v2.ContactService contactService = conn.getContactService();
+            ContactService contactService = conn.getContactService();
             Call<ContactList> call = contactService.createContactList(list);
             response = call.execute();
 
@@ -255,7 +256,7 @@ public class ContactService
 
         try
         {
-            com.constantcontact.v2.ContactService contactService = conn.getContactService();
+            ContactService contactService = conn.getContactService();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyymmdd");
             Date dated =null;
             try
@@ -307,7 +308,7 @@ public class ContactService
 
         try
         {
-            com.constantcontact.v2.ContactService contactService = conn.getContactService();
+            ContactService contactService = conn.getContactService();
             Paged<Contact> pagedContacts = contactService.getContactsByEmail(email).execute().body();
             if (pagedContacts.getResults().size() > 0)
             {

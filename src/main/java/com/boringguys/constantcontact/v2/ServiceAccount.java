@@ -8,7 +8,7 @@ import org.apache.commons.lang3.NotImplementedException;
 import java.io.IOException;
 import java.util.List;
 
-public class AccountService
+public class ServiceAccount
 {
 
     private ApiV2 service;
@@ -20,7 +20,7 @@ public class AccountService
      * @param apiKey    Constant Contact developer api key
      * @param apiToken  Constant Contact developer token
      */
-    public AccountService(String apiKey, String apiToken)
+    public ServiceAccount(String apiKey, String apiToken)
     {
         this.service = new ApiV2(apiKey, apiToken);
         this.conn = service.getApiConn();

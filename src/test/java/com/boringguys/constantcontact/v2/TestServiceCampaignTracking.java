@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestCampaignTrackingService
+public class TestServiceCampaignTracking
 {
     private String apiKey;
     private String apiToken;
@@ -36,13 +36,13 @@ public class TestCampaignTrackingService
     void testGetTrackingSummary()
     {
         // get the campaigns and take the first one
-        CampaignService campaignService = new CampaignService(apiKey, apiToken);
+        ServiceCampaign serviceCampaign = new ServiceCampaign(apiKey, apiToken);
 
         try
         {
-            List<Campaign> campaigns = campaignService.getSentCampaigns("2019/01/01");
+            List<Campaign> campaigns = serviceCampaign.getSentCampaigns("2019/01/01");
             Campaign campaign = campaigns.get(0);
-            CampaignTrackingService tracking = new CampaignTrackingService(apiKey, apiToken);
+            ServiceCampaignTracking tracking = new ServiceCampaignTracking(apiKey, apiToken);
             TrackingSummary summary = tracking.getTrackingSummary(campaign.getId());
             assertTrue(summary.getSends() > 0);
             assertTrue(summary.getOpens() > 0);

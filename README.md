@@ -1,5 +1,5 @@
 # Constant Contact
-This is a Java wrapper for Constant Contact API v2. The existing CC api (version 2) is pretty good, but I wrapped it here to add some convenience methods.  If you're making multiple requests to get pages of data from a list, it's easier to just wrap that in a method that does the work for you and returns the complete collection (ex., contactService.getContactsByList().
+This is a Java wrapper for Constant Contact API v2. The existing CC api (version 2) is pretty good, but I wrapped it here to add some convenience methods.  If you're making multiple requests to get pages of data from a list, it's easier to just wrap that in a method that does the work for you and returns the complete collection (ex., serviceContact.getContactsByList().
 
 I've also added some shortcut methods.  For instance, if you want to report on the "SENT" campaigns you can just do:
 
@@ -30,23 +30,23 @@ ContactList list = service.getContactListByName(String name)
 
 ```java
 // Fetch the info on your Constant Contact account
-AccountService accountService = new AccountService(apiKey, apiToken);
-AccountSummaryInformation summary = accountService.getAccountSummary();
+AccountService serviceAccount = new AccountService(apiKey, apiToken);
+AccountSummaryInformation summary = serviceAccount.getAccountSummary();
 //////
 
 // Fetch all your existing contact lists
-ContactService contactService = new ContactService(apiKey, apiToken);
-List<ContactList> lists = contactService.getContactLists();
+ContactService serviceContact = new ContactService(apiKey, apiToken);
+List<ContactList> lists = serviceContact.getContactLists();
 //////
 
 // Fetch contact list by name
-ContactService contactService = new ContactService(apiKey, apiToken);
-ContactList list = contactService.getContactListByName(name);
+ContactService serviceContact = new ContactService(apiKey, apiToken);
+ContactList list = serviceContact.getContactListByName(name);
 //////
 
 // Fetch all the contacts for list with id of 1
-ContactService contactService = new ContactService(apiKey, apiToken);
-List<Contact> contacts = contactService.getContactsByList("1", this.fetchLimit, this.dateCreated);
+ContactService serviceContact = new ContactService(apiKey, apiToken);
+List<Contact> contacts = serviceContact.getContactsByList("1", this.fetchLimit, this.dateCreated);
 //////
 
 // Create a contact list
@@ -62,8 +62,8 @@ String id = list.getId();
 //////
 
 // Fetch a contact
-ContactService contactService = new ContactService(apiKey, apiToken);
-List<Contact> contacts = contactService.getContactsByEmail("homer.simpson@gmail.com");
+ContactService serviceContact = new ContactService(apiKey, apiToken);
+List<Contact> contacts = serviceContact.getContactsByEmail("homer.simpson@gmail.com");
 contacts.forEach(a -> System.out.println(contact.getEmailAddresses()[0].getEmailAddress() + "," +
                 contact.getFirstName() + ","
                 + contact.getLastName() ) );
@@ -89,26 +89,26 @@ String contactId = savedContact.getId();
 //////
 
 // Fetch all draft campaigns
-CampaignService campaignService = new CampaignService(apiKey, apiToken);
-List<Campaign> campaigns = campaignService.getDraftCampaigns();
+CampaignService serviceCampaign = new CampaignService(apiKey, apiToken);
+List<Campaign> campaigns = serviceCampaign.getDraftCampaigns();
 campaigns.forEach(a -> System.out.println(a.getName()));
 //////
 
 // Fetch all sent campaigns
-CampaignService campaignService = new CampaignService(apiKey, apiToken);
-List<Campaign> campaigns = campaignService.getSentCampaigns();
+CampaignService serviceCampaign = new CampaignService(apiKey, apiToken);
+List<Campaign> campaigns = serviceCampaign.getSentCampaigns();
 campaigns.forEach(a -> System.out.println(a.getName()));
 //////
 
 // Fetch sent campaigns since 1/1/2019
-CampaignService campaignService = new CampaignService(apiKey, apiToken);
-List<Campaign> campaigns = campaignService.getSentCampaigns("2019/01/01 00:00:01");
+CampaignService serviceCampaign = new CampaignService(apiKey, apiToken);
+List<Campaign> campaigns = serviceCampaign.getSentCampaigns("2019/01/01 00:00:01");
 campaigns.forEach(a -> System.out.println(a.getName()));
 //////
 
 // Fetch a campaign
-CampaignService campaignService = new CampaignService(apiKey, apiToken);
-Campaign campaign = campaignService.getCampaign("campaign id");
+CampaignService serviceCampaign = new CampaignService(apiKey, apiToken);
+Campaign campaign = serviceCampaign.getCampaign("campaign id");
 System.out.println(campaign.getId() + "," +
                 campaign.getName() + "," +
                 campaign.getSubject() + "," +
