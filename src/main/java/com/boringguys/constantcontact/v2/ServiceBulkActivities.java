@@ -46,7 +46,7 @@ public class ServiceBulkActivities
      * @throws PayloadTooLargeException
      * @throws IOException
      */
-    public void addContacts(List<Contact> contacts, String[] contactLists, String[] columns)
+    public Response<Activity> addContacts(List<Contact> contacts, String[] contactLists, String[] columns)
             throws TooManyContactsException,PayloadTooLargeException,IOException
     {
         int numOfBytes = 0;
@@ -65,8 +65,10 @@ public class ServiceBulkActivities
         }
 
         // loop thru contacts list and make an importData object
-        for(int i = 0; i < contacts.size(); i++)
+        for (int i = 0; i < contacts.size(); i++)
         {
+            // TODO: add all the possible columns for mapping
+
             Contact contact = contacts.get(i);
             ImportData imp = new ImportData();
 
@@ -108,17 +110,13 @@ public class ServiceBulkActivities
         {
             Call<Activity> activity = service.addContacts(contactsToAdd);
             response = activity.execute();
-            Activity act2 = response.body();
-
-            System.out.println(act2);
-
         } catch (IOException e)
         {
             throw new IOException(e.getMessage());
         }
 
-        // errorBody
-
+        return response;
+    }
 /*
 
 // Set up lists and columns for import
@@ -142,5 +140,5 @@ CUSTOM FIELD 1 (to 15)
 
         */
 
-    }
+
 }

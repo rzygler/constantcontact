@@ -37,8 +37,6 @@ public class ServiceContact
         this.conn = service.getApiConn();
     }
 
-    // TODO: batch import of contacts
-
     // Call<Paged<Contact>> getContacts(@Query("limit") int limit, @Query("status") ContactStatus status);
     // Call<Paged<Contact>> getContacts(@Query("limit") int limit, @Query("modified_since") QueryDate date, @Query("status") ContactStatus status);
     // Call<Contact> getContact(@Path("contactId") String contactId);
