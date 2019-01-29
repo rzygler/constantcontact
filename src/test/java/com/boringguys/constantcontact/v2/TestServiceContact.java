@@ -157,7 +157,87 @@ public class TestServiceContact
     }
 
     @Test
-    @Disabled
+    void testUpdateContactReturnsUpdatedContact() throws InterruptedException
+    {
+        // First create a list
+        ServiceContact service = new ServiceContact(apiKey, apiToken);
+        String name = Helper.generateRandomString(10);
+        ContactListStatus status = ContactListStatus.ACTIVE;
+        Response<ContactList> response = service.createContactList(name, status);
+        String listId = response.body().getId();
+
+        // wait a bit
+        Thread.sleep(4000);
+
+        Contact contact = new Contact();
+
+        // set up test contact
+        String emailName = Helper.generateRandomString(10);
+        String firstName = Helper.generateRandomString(10);
+        String lastName = Helper.generateRandomString(10);
+
+        contact.setFirstName(firstName);
+        contact.setLastName(lastName);
+
+        EmailAddress address = new EmailAddress();
+        address.setEmailAddress(emailName + "@gmail.com");
+        // add the email address to the array
+        contact.setEmailAddresses(new EmailAddress[]{ address });
+
+        ContactListMetaData contactListMetaData = new ContactListMetaData();
+        contactListMetaData.setId(listId);
+        // add the contact list to the array
+        contact.setContactLists(new ContactListMetaData[]{ contactListMetaData });
+        // System.out.println(address.getEmailAddress());
+
+        // create the contact
+        Response<Contact> response2 = service.createContactByOwner(contact);
+        assertEquals(201, response2.code());
+        assertEquals("Created", response2.message());
+        assertNotNull(response2.body());
+        Contact savedContact = response2.body();
+
+        // Contact is created and embedded in response.body
+        assertTrue(response2.body() instanceof Contact);
+        String contactId = response2.body().getId();
+        assertEquals(response2.body().getEmailAddresses()[0].getEmailAddress(), address.getEmailAddress());
+
+        // wait a bit
+        Thread.sleep(4000);
+
+        // lets update the contact
+        String emailName2 = Helper.generateRandomString(10);
+        String firstName2 = Helper.generateRandomString(10);
+        String lastName2 = Helper.generateRandomString(10);
+        savedContact.setFirstName(firstName2);
+        savedContact.setLastName(lastName2);
+
+        EmailAddress address2 = new EmailAddress();
+        address2.setEmailAddress(emailName2 + "@gmail.com");
+        // add the email address to the array
+        savedContact.setEmailAddresses(new EmailAddress[]{ address2 });
+
+
+        // System.out.println(savedContact.getId() + " " + savedContact.getFirstName());
+
+        Response<Contact> response3 = service.updateContactByOwner(savedContact);
+        assertEquals(200, response3.code());
+        assertEquals("OK", response3.message());
+        assertNotNull(response2.body());
+        Contact updatedContact = response3.body();
+        assertEquals(firstName2, updatedContact.getFirstName());
+        assertEquals(lastName2, updatedContact.getLastName());
+
+
+        // cannot actually delete the contact via api
+
+        // delete the list
+        ServiceContact service2 = new ServiceContact(apiKey, apiToken);
+        Response deleteResponse = service2.deleteContactList(listId);
+        assertEquals(204, deleteResponse.code());
+    }
+
+    @Test
     void testCreateContactReturnsContact() throws InterruptedException
     {
         // First create a list
@@ -212,7 +292,6 @@ public class TestServiceContact
 
 
     @Test
-    @Disabled
     void testCreateDuplicateContactFails() throws InterruptedException
     {
         // First create a list

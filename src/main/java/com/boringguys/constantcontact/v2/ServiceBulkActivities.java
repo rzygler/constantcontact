@@ -19,6 +19,42 @@ public class ServiceBulkActivities
 {
     private ApiV2 service;
     private CCApi2 conn;
+    private String[] columns = {
+            "EMAIL",            // Required
+            "FIRST NAME",       // Required
+            "LAST NAME",        // Required
+            "BIRTHDAY_DAY",     // 1 to 31
+            "BIRTHDAY_MONTH",   // 1 to 12
+            "ANNIVERSARY",      // Accepts the following formats MM/DD/YYYY, M/D/YYYY, YYYY/MM/DD, YYYY/M/D, YYYY-MM-DD, YYYY-M-D,M-D-YYYY, M-DD-YYYY.
+                                // The year must be greater than 1900 and cannot be more than 10 years in the future
+                                //(with respect to the current year).
+            "JOB TITLE",        // DONE
+            "COMPANY NAME",
+            "WORK PHONE",       // DONE
+            "HOME PHONE",       // DONE
+            "ADDRESS LINE 1",
+            "ADDRESS LINE 2",
+            "CITY",
+            "STATE",
+            "COUNTRY",
+            "ZIP CODE",
+            "POSTAL CODE",
+            "CUSTOM FIELD 1",
+            "CUSTOM FIELD 2",
+            "CUSTOM FIELD 3",
+            "CUSTOM FIELD 4",
+            "CUSTOM FIELD 5",
+            "CUSTOM FIELD 6",
+            "CUSTOM FIELD 7",
+            "CUSTOM FIELD 8",
+            "CUSTOM FIELD 9",
+            "CUSTOM FIELD 10",
+            "CUSTOM FIELD 11",
+            "CUSTOM FIELD 12",
+            "CUSTOM FIELD 13",
+            "CUSTOM FIELD 14",
+            "CUSTOM FIELD 15"
+    };
 
     /**
      * Constructor for Account Service
@@ -67,8 +103,6 @@ public class ServiceBulkActivities
         // loop thru contacts list and make an importData object
         for (int i = 0; i < contacts.size(); i++)
         {
-            // TODO: add all the possible columns for mapping
-
             Contact contact = contacts.get(i);
             ImportData imp = new ImportData();
 
@@ -92,6 +126,23 @@ public class ServiceBulkActivities
             }
 
             imp.setEmailAddresses(emails);
+
+            // non-required contact fields
+            // TODO: finish adding non-required contact fields to bulk import
+            if (contact.getWorkPhone() != null)
+            {
+                imp.setWorkPhone(contact.getWorkPhone());
+            }
+
+            if (contact.getHomePhone() != null)
+            {
+                imp.setHomePhone(contact.getHomePhone());
+            }
+
+            if (contact.getJobTitle() != null)
+            {
+                imp.setJobTitle(contact.getJobTitle());
+            }
 
             importData[i] = imp;
         }
@@ -117,28 +168,5 @@ public class ServiceBulkActivities
 
         return response;
     }
-/*
-
-// Set up lists and columns for import
-// Column names can be found at http://developer.constantcontact.com/docs/bulk_activities_api/bulk-activities-import-contacts.html
-EMAIL - only one email address allowed
-FIRST NAME
-LAST NAME
-BIRTHDAY_DAY - 1 to 31
-BIRTHDAY_MONTH - 1 to 12
-ANNIVERSARY - Accepts the following formats MM/DD/YYYY, M/D/YYYY, YYYY/MM/DD, YYYY/M/D, YYYY-MM-DD, YYYY-M-D,M-D-YYYY, M-DD-YYYY. The year must be greater than 1900 and cannot be more than 10 years in the future (with respect to the current year).
-JOB TITLE
-COMPANY NAME
-WORK PHONE
-HOME PHONE
-ADDRESS LINE 1,2
-CITY
-STATE
-COUNTRY
-ZIP/POSTAL CODE
-CUSTOM FIELD 1 (to 15)
-
-        */
-
 
 }

@@ -164,23 +164,6 @@ public class TestServiceContactList
         assertEquals(204, deleteResponse.code());
     }
 
-    //1645435044    zzz
-    // 1705803815   yyy
-
-    @Test
-    @Disabled
-    void testGetContactListByNameZZZ() throws InterruptedException
-    {
-        ServiceContact service = new ServiceContact(apiKey, apiToken);
-        ContactList list = service.getContactListByName("yyy");
-
-        if(showDebug)
-        {
-            Helper.printContactList(list);
-        }
-
-    }
-
     @Test
     void testGetContactListByName() throws InterruptedException
     {

@@ -41,8 +41,6 @@ public class ServiceContact
     // Call<Paged<Contact>> getContacts(@Query("limit") int limit, @Query("modified_since") QueryDate date, @Query("status") ContactStatus status);
     // Call<Contact> getContact(@Path("contactId") String contactId);
     //
-    // Call<Contact> createContact(@Body Contact contact, @Query("action_by") OptInSource optInSource);
-    // Call<Contact> updateContact(@Body Contact contact, @Path("contactId") String contactId, @Query("action_by") OptInSource optInSource);
     // Call<Response<Void>> unsubscribeContact(@Path("contactId") String contactId);
     //
     // Call<ContactList> updateContactList(@Body ContactList contactList, @Path("listId") String listId);
@@ -153,24 +151,79 @@ public class ServiceContact
         return response;
     }
 
+
+    /**
+     * Update an existing contact
+     * @param contact
+     * @return
+     */
+    public Response<Contact> updateContactByOwner(Contact contact)
+    {
+        return updateContact(contact, OptInSource.ACTION_BY_OWNER);
+    }
+
+    /**
+     * Update an existing contact
+     * @param contact
+     * @return
+     */
+    public Response<Contact> updateContactByVisitor(Contact contact)
+    {
+        return updateContact(contact, OptInSource.ACTION_BY_VISITOR);
+    }
+
+
+    /**
+     * Update an existing contact
+     * @param contact
+     * @param source
+     * @return
+     */
+    public Response<Contact> updateContact(Contact contact, OptInSource source)
+    {
+        Response<Contact> response = null;
+        try
+        {
+            ContactService service = conn.getContactService();
+            Call<Contact> call = service.updateContact(contact, contact.getId(), source);
+            response = call.execute();
+            // System.out.println(response);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    /**
+     * Create a new contact
+     * @param contact
+     * @return
+     */
     public Response<Contact> createContactByOwner(Contact contact)
     {
         return createContact(contact, OptInSource.ACTION_BY_OWNER);
     }
 
+    /**
+     * Create a new contact
+     * @param contact
+     * @return
+     */
     public Response<Contact> createContactByVisitor(Contact contact)
     {
         return createContact(contact, OptInSource.ACTION_BY_VISITOR);
     }
 
-
+    /**
+     * Create a new contact
+     * @param contact
+     * @param source
+     * @return
+     */
     public Response<Contact> createContact(Contact contact, OptInSource source)
     {
-        if (source == null)
-        {
-            source = OptInSource.ACTION_BY_OWNER;
-        }
-
         Response<Contact> response = null;
         try
         {
