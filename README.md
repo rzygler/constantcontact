@@ -19,6 +19,11 @@ List<Campaign> campaigns = service.getSentCampaigns();
 ContactList list = service.getContactListByName(String name)
 /////
 
+// Print Sent Campaign Summaries for emails since {Date} to CSV file
+ServiceCampaignTracking service = new ServiceCampaignTracking(apiKey, apiToken);
+service.printSentCampaignSummariesSince("2019/01/01", "summary.csv");
+//////
+
 ```
 
 ## Build instructions
