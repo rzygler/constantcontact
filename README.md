@@ -1,7 +1,17 @@
 # Constant Contact
 This is a Java wrapper for Constant Contact API v2. The existing CC api (version 2) is pretty good, but I wrapped it here to add some convenience methods.  If you're making multiple requests to get pages of data from a list, it's easier to just wrap that in a method that does the work for you and returns the complete collection (ex., serviceContact.getContactsByList().
 
-I've also added some shortcut methods.  For instance, if you want to report on the "SENT" campaigns you can just do:
+I've also added some shortcut methods.  
+
+Add a contact quickly:
+```java
+ServiceContact service = new ServiceContact(apiKey, apiToken);
+Response<Contact> response = service.createContact("homer.simpson@gmail.com", "Homer", "Simpson", "listId");
+// Contact is saved and embedded in response.body
+Contact savedContact = response.body();
+```
+
+If you want to report on the "SENT" campaigns you can just do:
 
 ```java
 List<Campaign> campaigns = service.getSentCampaigns();
@@ -25,7 +35,7 @@ ContactList list = service.getContactListByName(String name)
 ## Help with the rest
 * The Java API v2 from Constant Contact uses [Retrofit](https://square.github.io/retrofit/) as its framework so you will need to read up on how to handle the synchronous/async methods of Retrofit.  More help [here](https://futurestud.io/tutorials/retrofit-synchronous-and-asynchronous-requests) and [here](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Call.html)
 
-## Some code examples
+## Code examples
 
 
 ```java
@@ -69,6 +79,13 @@ contacts.forEach(a -> System.out.println(contact.getEmailAddresses()[0].getEmail
                 + contact.getLastName() ) );
  ////// 
   
+// Create a contact quickly, with just email, first, last, and list
+ServiceContact service = new ServiceContact(apiKey, apiToken);
+Response<Contact> response = service.createContact("homer.simpson@gmail.com", "Homer", "Simpson", "listId");
+// Contact is saved and embedded in response.body
+Contact savedContact = response.body();
+/////
+
 // Create a contact
 Contact contact = new Contact();
 EmailAddress address = new EmailAddress();
