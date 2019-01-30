@@ -4,10 +4,7 @@ import com.constantcontact.v2.CCApi2;
 import com.constantcontact.v2.ContactService;
 import com.constantcontact.v2.Paged;
 import com.constantcontact.v2.QueryDate;
-import com.constantcontact.v2.contacts.Contact;
-import com.constantcontact.v2.contacts.ContactList;
-import com.constantcontact.v2.contacts.ContactListStatus;
-import com.constantcontact.v2.contacts.OptInSource;
+import com.constantcontact.v2.contacts.*;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -48,7 +45,11 @@ public class ServiceContact
     // Call<SignupFormResponse> createCustomSignupForm(@Body SignupFormRequest signupFormRequest);
 
 
-
+    /**
+     * Get contact list identified by listId
+     * @param listId
+     * @return
+     */
     public ContactList getContactList(String listId)
     {
         ContactList list = new ContactList();
@@ -66,6 +67,11 @@ public class ServiceContact
         return list;
     }
 
+    /**
+     * Get contact list by name
+     * @param name
+     * @return
+     */
     public ContactList getContactListByName(String name)
     {
         List<ContactList> lists = new ArrayList<>();
@@ -172,6 +178,7 @@ public class ServiceContact
         return updateContact(contact, OptInSource.ACTION_BY_VISITOR);
     }
 
+    // TODO: update contact using hashmap<string, string>, email=test@test.com, field-to-update=new value
 
     /**
      * Update an existing contact
@@ -195,6 +202,8 @@ public class ServiceContact
 
         return response;
     }
+
+
 
     /**
      * Create a new contact
@@ -238,6 +247,74 @@ public class ServiceContact
 
         return response;
     }
+
+    /**
+     * Create a contact with basic info
+     * @param email
+     * @param first
+     * @param last
+     * @param listId
+     * @return
+     */
+    public Response<Contact> createContactBySource(String email, String first, String last, String listId, OptInSource source)
+    {
+        Contact contact = new Contact();
+
+        contact.setFirstName(first);
+        contact.setLastName(last);
+
+        EmailAddress address = new EmailAddress();
+        address.setEmailAddress(email);
+        // add the email address to the array
+        contact.setEmailAddresses(new EmailAddress[]{ address });
+
+        ContactListMetaData contactListMetaData = new ContactListMetaData();
+        contactListMetaData.setId(listId);
+        // add the contact list to the array
+        contact.setContactLists(new ContactListMetaData[]{ contactListMetaData });
+
+        return createContact(contact, source);
+    }
+
+    /**
+     * Create contact with basic info
+     * @param email
+     * @param first
+     * @param last
+     * @param listId
+     * @return
+     */
+    public Response<Contact> createContact(String email, String first, String last, String listId)
+    {
+        return createContactBySource(email, first, last, listId, OptInSource.ACTION_BY_OWNER);
+    }
+
+    /**
+     * Create contact with basic info
+     * @param email
+     * @param first
+     * @param last
+     * @param listId
+     * @return
+     */
+    public Response<Contact> createContactByOwner(String email, String first, String last, String listId)
+    {
+        return createContactBySource(email, first, last, listId, OptInSource.ACTION_BY_OWNER);
+    }
+
+    /**
+     * Create contact with basic info
+     * @param email
+     * @param first
+     * @param last
+     * @param listId
+     * @return
+     */
+    public Response<Contact> createContactByVisitor(String email, String first, String last, String listId)
+    {
+        return createContactBySource(email, first, last, listId, OptInSource.ACTION_BY_VISITOR);
+    }
+
 
     /**
      * Create a new contact list

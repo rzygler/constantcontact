@@ -290,6 +290,50 @@ public class TestServiceContact
     }
 
 
+    @Test
+    void testQuickCreateContactReturnsContact() throws InterruptedException
+    {
+        // First create a list
+        ServiceContact service = new ServiceContact(apiKey, apiToken);
+        String name = Helper.generateRandomString(10);
+        ContactListStatus status = ContactListStatus.ACTIVE;
+        Response<ContactList> response = service.createContactList(name, status);
+        String listId = response.body().getId();
+
+        // wait a bit
+        Thread.sleep(4000);
+
+        // set up test contact
+        String email = Helper.generateRandomString(10) + "@gmail.com";
+        String first = Helper.generateRandomString(11);
+        String last = Helper.generateRandomString(12);
+
+
+        // create the contact
+        Response<Contact> response2 = service.createContact(email, first, last, listId);
+        assertEquals(201, response2.code());
+        assertEquals("Created", response2.message());
+        assertNotNull(response.body());
+
+        // Contact is created and embedded in response.body
+        assertTrue(response2.body() instanceof Contact);
+        String contactId = response2.body().getId();
+        Contact contact = response2.body();
+        assertEquals(email, contact.getEmailAddresses()[0].getEmailAddress());
+        assertEquals(first, contact.getFirstName());
+        assertEquals(last, contact.getLastName());
+
+        // wait a bit
+        Thread.sleep(4000);
+
+        // cannot actually delete the contact via api
+
+        // delete the list
+        ServiceContact service2 = new ServiceContact(apiKey, apiToken);
+        Response deleteResponse = service2.deleteContactList(listId);
+        assertEquals(204, deleteResponse.code());
+
+    }
 
     @Test
     void testCreateDuplicateContactFails() throws InterruptedException

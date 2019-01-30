@@ -4,6 +4,8 @@ import com.constantcontact.v2.campaigns.Campaign;
 import com.constantcontact.v2.tracking.TrackingSummary;
 import org.junit.jupiter.api.*;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -55,12 +57,34 @@ public class TestServiceCampaignTracking
         {
             e.printStackTrace();
         }
-
-
-
-
     }
 
+    @Test
+    void testPrintTrackingSummariesSucceeds() throws IOException
+    {
+        ServiceCampaign serviceCampaign = new ServiceCampaign(apiKey, apiToken);
+        ServiceCampaignTracking serviceTracking = new ServiceCampaignTracking(apiKey, apiToken);
+
+        List<TrackingSummary> summaries = new ArrayList<>();
+        // TODO: get full campaign, then loop thru summaries
+        // TODO: maybe make method printCampaignSummariesSince(date) or getCampaignSummariesSince(date)
+
+        try
+        {
+            List<Campaign> campaigns = serviceCampaign.getSentCampaigns("2019/01/01");
+            for(Campaign campaign : campaigns)
+            {
+                Thread.sleep(4000);
+                summaries.add(serviceTracking.getTrackingSummary(campaign.getId()));
+            }
+
+            serviceTracking.printTrackingSummaries(campaigns, summaries);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
 
     @AfterEach
     void tearDown()
