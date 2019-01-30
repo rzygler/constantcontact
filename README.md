@@ -1,30 +1,24 @@
 # Constant Contact
-This is a Java wrapper for Constant Contact API v2. The existing CC api (version 2) is pretty good, but I wrapped it here to add some convenience methods.  If you're making multiple requests to get pages of data from a list, it's easier to just wrap that in a method that does the work for you and returns the complete collection (ex., serviceContact.getContactsByList().
+This is a Java wrapper for Constant Contact API v2. The existing CC api (version 2) is pretty good, but I wrapped it here to add some convenience methods.  
 
-I've also added some shortcut methods.  
+Highlights (full examples further down page)
 
-Add a contact quickly:
 ```java
+// Add a contact quickly
 ServiceContact service = new ServiceContact(apiKey, apiToken);
 Response<Contact> response = service.createContact("homer.simpson@gmail.com", "Homer", "Simpson", "listId");
 // Contact is saved and embedded in response.body
 Contact savedContact = response.body();
-```
+/////
 
-If you want to report on the "SENT" campaigns you can just do:
-
-```java
+// Report on the "SENT" campaigns you can just do:
 List<Campaign> campaigns = service.getSentCampaigns();
-```
-instead of the longhand way in the CC api which looks like:
+///// 
 
-```java
-List<Campaign> campaigns = service.getCampaigns(500, CampaignStatus.SEND)
-```
-There are also a few methods that do not exist in the CC API.  For instance, I've created a way to get a contact list by name:
-
-```java
+// Fetch a contact list by its name
 ContactList list = service.getContactListByName(String name)
+/////
+
 ```
 
 ## Build instructions
