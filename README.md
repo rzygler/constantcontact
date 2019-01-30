@@ -80,7 +80,7 @@ Response<Contact> response = service.createContact("homer.simpson@gmail.com", "H
 Contact savedContact = response.body();
 /////
 
-// Create a contact
+// Create a contact the long way
 Contact contact = new Contact();
 EmailAddress address = new EmailAddress();
 address.setEmailAddress("homer.simpson@gmail.com");
