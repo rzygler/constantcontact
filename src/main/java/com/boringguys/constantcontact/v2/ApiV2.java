@@ -7,6 +7,8 @@ public class ApiV2
 {
     private int millisToSleepBetweenRequests = 2000;
     private CCApi2 api;
+    private String apiKey;
+    private String apiToken;
 
     public CCApi2 getApiConn()
     {
@@ -22,6 +24,16 @@ public class ApiV2
         this.api = api;
     }
 
+    public String getApiKey()
+    {
+        return this.apiKey;
+    }
+
+    public String getApiToken()
+    {
+        return this.apiToken;
+    }
+
     /**
      * Constructor
      * @param apiKey    Constant Contact developer api key
@@ -29,6 +41,8 @@ public class ApiV2
      */
     public ApiV2(String key, String token)
     {
+        this.apiKey = key;
+        this.apiToken = token;
         this.api = getApiService(key, token);
     }
 

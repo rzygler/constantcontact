@@ -125,6 +125,12 @@ System.out.println(campaign.getId() + "," +
                 campaign.getSubject() + "," +
                 campaign.getCreatedDate())
 //////
+
+// Print Sent Campaign Summaries since {Date} to CSV file
+ServiceCampaignTracking service = new ServiceCampaignTracking(apiKey, apiToken);
+service.printSentCampaignSummariesSince("2019/01/01", "summary.csv");
+//////
+
 ```
 
 

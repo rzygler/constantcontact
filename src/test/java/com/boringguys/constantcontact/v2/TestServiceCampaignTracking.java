@@ -24,8 +24,6 @@ public class TestServiceCampaignTracking
 
     }
 
-    // TODO: save campaign tracking report to csv
-
     @BeforeEach
     void init() throws Exception
     {
@@ -60,31 +58,16 @@ public class TestServiceCampaignTracking
     }
 
     @Test
-    void testPrintTrackingSummariesSucceeds() throws IOException
+    void testPrintSentCampaignSummariesSinceSucceeds() throws IOException
     {
-        ServiceCampaign serviceCampaign = new ServiceCampaign(apiKey, apiToken);
         ServiceCampaignTracking serviceTracking = new ServiceCampaignTracking(apiKey, apiToken);
+        serviceTracking.printSentCampaignSummariesSince("2019/01/01", null);
 
-        List<TrackingSummary> summaries = new ArrayList<>();
-        // TODO: get full campaign, then loop thru summaries
-        // TODO: maybe make method printCampaignSummariesSince(date) or getCampaignSummariesSince(date)
-
-        try
-        {
-            List<Campaign> campaigns = serviceCampaign.getSentCampaigns("2019/01/01");
-            for(Campaign campaign : campaigns)
-            {
-                Thread.sleep(4000);
-                summaries.add(serviceTracking.getTrackingSummary(campaign.getId()));
-            }
-
-            serviceTracking.printTrackingSummaries(campaigns, summaries);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        // something to test?  Read the contents of file
 
     }
+
+
 
     @AfterEach
     void tearDown()

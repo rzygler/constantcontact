@@ -3,6 +3,7 @@ package com.boringguys.constantcontact.v2;
 import com.constantcontact.v2.CCApi2;
 import com.constantcontact.v2.CampaignTrackingService;
 import com.constantcontact.v2.campaigns.Campaign;
+import com.constantcontact.v2.campaigns.CampaignStatus;
 import com.constantcontact.v2.tracking.TrackingSummary;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -11,6 +12,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -56,33 +58,89 @@ public class ServiceCampaignTracking
         return summary;
     }
 
-    public void printTrackingSummaries(List<Campaign> campaigns, List<TrackingSummary> summaries) throws IOException
+
+    public void printSentCampaignSummariesSince(String theDate, String file)
     {
+        List<Campaign> campaigns = new ArrayList<>();
+
+
+        try
+        {
+            ServiceCampaign service = new ServiceCampaign(this.service.getApiKey(), this.service.getApiToken());
+
+            // this call gets us the campaigns but doens't return the tracking summary details
+            // so we need to loop thru all the campaigns to get their details
+            List<Campaign> sentCampaigns = service.getSentCampaigns(theDate);
+
+            for(Campaign tempCampaign : sentCampaigns)
+            {
+                // System.out.println("getting campaign: " + tempCampaign.getName());
+                Thread.sleep(1000);
+                Campaign campaign = service.getCampaign(tempCampaign.getId());
+                campaigns.add(campaign);
+            }
+            List<TrackingSummary> summaries = getTrackingSummaries(campaigns);
+
+            printTrackingSummaries(campaigns, summaries, file);
+
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    public List<TrackingSummary> getTrackingSummaries(List<Campaign> campaigns) throws InterruptedException
+    {
+        List<TrackingSummary> summaries = new ArrayList<>();
+
+        for(Campaign tempCampaign : campaigns)
+        {
+            Thread.sleep(1000);
+            TrackingSummary summary = getTrackingSummary(tempCampaign.getId());
+            summaries.add(summary);
+        }
+        return summaries;
+
+    }
+
+    public void printTrackingSummaries(List<Campaign> campaigns, List<TrackingSummary> summaries, String file) throws IOException
+    {
+        if ( file == null)
+        {
+            file  = "summary.csv";
+        }
+
         try (
-                BufferedWriter writer = Files.newBufferedWriter(Paths.get("test.csv"));
+                BufferedWriter writer = Files.newBufferedWriter(Paths.get(file));
 
                 CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.DEFAULT
                         .withHeader(
                                 "CAMPAIGN NAME",
                                 "SUBJECT",
-                           //     "DATE SENT",
+                                "DATE SENT",
                                 "EMAILS SENT",
                                 "OPENED",
+                                "OPEN RATE",
                                 "CLICKED",
+                                "CLICK RATE",
                                 "BOUNCED",
-                                "UNSUBSCRIBED"
+                                "BOUNCE RATE",
+                                "UNSUBSCRIBED",
+                                "UNSUB RATE"
                         ));
         ) {
             for(int i = 0; i < campaigns.size(); i++)
             {
                 int emailsSent, emailsOpened, emailsClicked, emailsBounced, emailsUnsubscribed;
-                int calcSentMinusBounces, calcOpenRate, calcBounceRate, calcClickRate, calcUnsubscribeRate;
+                float calcSentMinusBounces, calcOpenRate, calcBounceRate, calcClickRate, calcUnsubscribeRate;
                 Campaign campaign = campaigns.get(i);
                 TrackingSummary summary = summaries.get(i);
 
                 String name = campaign.getName();
                 String subject = campaign.getSubject();
-                // String dateSent = campaign.getLastRunDate().toString();
+                String dateSent = campaign.getLastRunDate().toString();
 
 
                 emailsSent = summary.getSends();
@@ -92,20 +150,24 @@ public class ServiceCampaignTracking
                 emailsUnsubscribed = summary.getUnsubscribes();
                 calcSentMinusBounces = emailsSent - emailsBounced;
 
-                calcOpenRate = Math.round((emailsOpened / calcSentMinusBounces) *100);
-                calcBounceRate = Math.round((emailsBounced / emailsSent) * 100);
-                calcClickRate = Math.round((emailsClicked / calcSentMinusBounces) * 100);
-                calcUnsubscribeRate = Math.round((emailsUnsubscribed / calcSentMinusBounces) * 100);
+                calcOpenRate = (emailsOpened / calcSentMinusBounces) *100;
+                calcBounceRate = (emailsBounced / emailsSent) * 100;
+                calcClickRate = (emailsClicked / calcSentMinusBounces) * 100;
+                calcUnsubscribeRate = (emailsUnsubscribed / calcSentMinusBounces) * 100;
 
                 csvPrinter.printRecord(
                         name,
                         subject,
-                      //  dateSent,
+                        dateSent,
                         emailsSent,
                         emailsOpened,
+                        String.format("%.1f",calcOpenRate),
                         emailsClicked,
+                        String.format("%.1f", calcClickRate),
                         emailsBounced,
-                        emailsUnsubscribed
+                        String.format("%.1f", calcBounceRate),
+                        emailsUnsubscribed,
+                        String.format("%.1f", calcUnsubscribeRate)
 
                 );
             }
