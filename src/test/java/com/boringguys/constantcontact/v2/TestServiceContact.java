@@ -4,6 +4,7 @@ import com.constantcontact.v2.contacts.*;
 import org.junit.jupiter.api.*;
 import retrofit2.Response;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -98,6 +99,40 @@ public class TestServiceContact
         }
     }
 
+
+
+    @Test
+    void testGetHomerByEmail()
+    {
+        ServiceContact serviceContact = new ServiceContact(apiKey, apiToken);
+        List<Contact> contacts = serviceContact.getContactsByEmail("homer@gmail.com");
+
+        assertTrue(contacts.size() > 0);
+        assertNotNull(contacts.get(0));
+        assertTrue(contacts.get(0).getFirstName().equals("Homer"));
+
+        if (showDebug)
+        {
+            contacts.forEach(a -> Helper.printContact(a));
+        }
+    }
+
+    @Test
+    void testGetHomer2ByEmail()
+    {
+        ServiceContact serviceContact = new ServiceContact(apiKey, apiToken);
+        List<Contact> contacts = serviceContact.getContactsByEmail("homer.simpson@gmail.com");
+
+        assertTrue(contacts.size() > 0);
+        assertNotNull(contacts.get(0));
+        Contact contact = contacts.get(0);
+        assertTrue(contacts.get(0).getFirstName().equals("Homer"));
+
+        if (showDebug)
+        {
+            contacts.forEach(a -> Helper.printContact(a));
+        }
+    }
 
 
     @Test
@@ -322,6 +357,78 @@ public class TestServiceContact
         assertEquals(email, contact.getEmailAddresses()[0].getEmailAddress());
         assertEquals(first, contact.getFirstName());
         assertEquals(last, contact.getLastName());
+
+        // wait a bit
+        Thread.sleep(4000);
+
+        // cannot actually delete the contact via api
+
+        // delete the list
+        ServiceContact service2 = new ServiceContact(apiKey, apiToken);
+        Response deleteResponse = service2.deleteContactList(listId);
+        assertEquals(204, deleteResponse.code());
+
+    }
+
+    @Test
+    void testIsAllowedContactFieldSucceeds()
+    {
+        ServiceContact service = new ServiceContact(apiKey, apiToken);
+        assertTrue(service.isAllowedContactField("first_name"));
+        assertTrue(service.isAllowedContactField("first_name"));
+    }
+
+    @Test
+    void testIsAllowedContactFieldFails()
+    {
+        ServiceContact service = new ServiceContact(apiKey, apiToken);
+        String name = Helper.generateRandomString(10);
+        assertFalse(service.isAllowedContactField(name));
+
+    }
+
+    @Test
+    void testUpdateContactNamesSucceeds() throws InterruptedException
+    {
+        // First create a list
+        ServiceContact service = new ServiceContact(apiKey, apiToken);
+        String name = Helper.generateRandomString(10);
+        ContactListStatus status = ContactListStatus.ACTIVE;
+        Response<ContactList> response = service.createContactList(name, status);
+        String listId = response.body().getId();
+
+        // wait a bit
+        Thread.sleep(4000);
+
+        // set up test contact
+        String email = Helper.generateRandomString(10) + "@gmail.com";
+        String first = Helper.generateRandomString(11);
+        String last = Helper.generateRandomString(12);
+
+
+        // create the contact
+        Response<Contact> response2 = service.createContact(email, first, last, listId);
+        assertEquals(201, response2.code());
+        assertEquals("Created", response2.message());
+        assertNotNull(response.body());
+
+        first = Helper.generateRandomString(6);
+        last = Helper.generateRandomString(6);
+        HashMap<String,String> fields = new HashMap<>();
+        fields.put("first_name",first);
+        fields.put("last_name", last);
+
+        // wait a bit
+        Thread.sleep(4000);
+
+        Response<Contact> response3 = service.updateContact(email,fields );
+        assertEquals(200,response3.code());
+        assertEquals("OK", response3.message());
+
+        Contact updatedContact = response3.body();
+        assertEquals(first, updatedContact.getFirstName());
+        assertEquals(last, updatedContact.getLastName());
+
 
         // wait a bit
         Thread.sleep(4000);

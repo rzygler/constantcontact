@@ -10,10 +10,7 @@ import retrofit2.Response;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 public class ServiceContact
@@ -21,6 +18,7 @@ public class ServiceContact
     private ApiV2 service;
     private CCApi2 conn;
     int millisToSleepBetweenRequests = 4000;
+
 
     /**
      * Constructor for Contact Service
@@ -32,6 +30,8 @@ public class ServiceContact
     {
         this.service = new ApiV2(apiKey, apiToken);
         this.conn = service.getApiConn();
+
+
     }
 
     // Call<Paged<Contact>> getContacts(@Query("limit") int limit, @Query("status") ContactStatus status);
@@ -178,7 +178,103 @@ public class ServiceContact
         return updateContact(contact, OptInSource.ACTION_BY_VISITOR);
     }
 
-    // TODO: update contact using hashmap<string, string>, email=test@test.com, field-to-update=new value
+
+    public boolean isAllowedContactField(String field)
+    {
+        List<String> allowedContactFields = Arrays.asList(
+                "first_name",
+                "last_name",
+                "cell_phone",
+                "company_name",
+                "fax",
+                "home_phone",
+                "job_title",
+                "work_phone",
+                "email",
+                "address1.street",
+                "address1.city",
+                "address1.state",
+                "address1.postal"
+        );
+
+        return allowedContactFields.stream().anyMatch(str -> str.trim().equals(field));
+    }
+
+
+    // TODO: finish update contact using hashmap<string, string>, email=test@test.com, field-to-update=new value
+    public Response<Contact> updateContact(String email, HashMap fieldMap)
+    {
+        Response<Contact> response = null;
+
+        // look up contact
+        List<Contact> contacts = getContactsByEmail(email);
+        if (contacts.size() > 1)
+        {
+            return response;
+        }
+        Contact contact = contacts.get(0);
+
+        Iterator it= fieldMap.entrySet().iterator();
+        while(it.hasNext())
+        {
+            Map.Entry pair = (Map.Entry)it.next();
+            String key = pair.getKey().toString();
+            String val = pair.getValue().toString();
+
+            // make sure key value pairs are valid
+            if (isAllowedContactField(key))
+            {
+                // update contact from key value pairs
+                switch(key)
+                {
+                    case "first_name":
+                        contact.setFirstName(val);
+                        break;
+                    case "last_name":
+                        contact.setLastName(val);
+                        break;
+                    case "cell_phone":
+                        contact.setCellPhone(val);
+                        break;
+                    case "company_name":
+                        contact.setCompanyName(val);
+                        break;
+                    case "fax":
+                        contact.setFax(val);
+                        break;
+                    case "home_phone":
+                        contact.setHomePhone(val);
+                        break;
+                    case "job_title":
+                        contact.setJobTitle(val);
+                        break;
+                    case "work_phone":
+                        contact.setWorkPhone(val);
+                        break;
+                    case "email":
+                        // EmailAddress address = new EmailAddress();
+                        // address.setEmailAddress(val);
+                        // add the email address to the array
+                        // contact.setEmailAddresses();
+
+                        break;
+                    case "address1.street":
+                    case "address1.city":
+                    case "address1.state":
+                    case "address1.postal":
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        // moe szyslak
+
+        // update contact via api
+        return updateContact(contact, OptInSource.ACTION_BY_OWNER);
+
+    }
+
 
     /**
      * Update an existing contact
@@ -239,6 +335,7 @@ public class ServiceContact
             ContactService service = conn.getContactService();
             Call<Contact> call = service.createContact(contact, source);
             response = call.execute();
+            //System.out.println(response.errorBody().string());
             // System.out.println(response);
         } catch (Exception e)
         {
