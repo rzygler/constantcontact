@@ -58,7 +58,12 @@ public class ServiceCampaignTracking
         return summary;
     }
 
-
+    /**
+     * Print the full Campaign Summary since {Date} to a CSV file
+     *
+     * @param theDate
+     * @param file
+     */
     public void printSentCampaignSummariesSince(String theDate, String file)
     {
         List<Campaign> campaigns = new ArrayList<>();
@@ -91,6 +96,13 @@ public class ServiceCampaignTracking
 
     }
 
+    /**
+     * Get the campaign tracking summaries for a list of campaigns
+     *
+     * @param campaigns
+     * @return
+     * @throws InterruptedException
+     */
     public List<TrackingSummary> getTrackingSummaries(List<Campaign> campaigns) throws InterruptedException
     {
         List<TrackingSummary> summaries = new ArrayList<>();
@@ -105,6 +117,14 @@ public class ServiceCampaignTracking
 
     }
 
+    /**
+     * Print the campaign tracking summarys for a list of campaigns (and matching list of summaries)
+     *
+     * @param campaigns
+     * @param summaries
+     * @param file
+     * @throws IOException
+     */
     public void printTrackingSummaries(List<Campaign> campaigns, List<TrackingSummary> summaries, String file) throws IOException
     {
         if ( file == null)

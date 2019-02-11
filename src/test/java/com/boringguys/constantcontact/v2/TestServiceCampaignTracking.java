@@ -5,7 +5,6 @@ import com.constantcontact.v2.tracking.TrackingSummary;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
